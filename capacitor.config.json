@@ -1,0 +1,14 @@
+{
+  "appId": "com.ibmfile.enterprise",
+  "appName": "IBMFILE",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1500,
+      "backgroundColor": "#161616"
+    }
+  }
+}

@@ -1,0 +1,865 @@
+/* ==========================================================================
+   IBM CARBON DESIGN SYSTEM 2.0 (MODERNIZED ENTERPRISE EDITION)
+   IBMFILE Enterprise (ibmfile.com) — Multi-Device & Mobile Ready
+   ========================================================================== */
+
+:root {
+  /* Fonts */
+  --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  /* IBM Carbon Dark V11 Tokens (Default) */
+  --cds-bg-body: #121212;
+  --cds-bg-surface-0: #161616;
+  --cds-bg-surface-1: #212121;
+  --cds-bg-surface-2: #282828;
+  --cds-bg-surface-3: #333333;
+  --cds-bg-hover: #393939;
+  --cds-bg-active: #4c4c4c;
+
+  --cds-border-subtle: #2d2d2d;
+  --cds-border-strong: #404040;
+  --cds-border-interactive: #0f62fe;
+
+  --cds-text-primary: #f4f4f4;
+  --cds-text-secondary: #c6c6c6;
+  --cds-text-muted: #8d8d8d;
+  --cds-text-inverse: #161616;
+
+  /* IBM Accent Colors */
+  --cds-blue: #0f62fe;
+  --cds-blue-hover: #0353e9;
+  --cds-blue-light: #4589ff;
+  --cds-cyan: #1192e8;
+  --cds-teal: #009d9a;
+  --cds-green: #24a148;
+  --cds-green-light: #42be65;
+  --cds-red: #da1e28;
+  --cds-red-light: #fa4d56;
+  --cds-amber: #f1c21b;
+  --cds-purple: #8a3ffc;
+  --cds-magenta: #ee5396;
+
+  /* Shadows & Radius (Modern Carbon: minimal radius, crisp elevation) */
+  --cds-radius-xs: 2px;
+  --cds-radius-sm: 4px;
+  --cds-radius-md: 6px;
+  --cds-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+  --cds-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --cds-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.65);
+  --cds-glow-blue: 0 0 16px rgba(15, 98, 254, 0.35);
+
+  /* Transitions */
+  --cds-transition: all 0.2s cubic-bezier(0.2, 0, 0.38, 0.9);
+}
+
+/* Light Theme Variables */
+[data-theme="light"] {
+  --cds-bg-body: #f4f4f4;
+  --cds-bg-surface-0: #ffffff;
+  --cds-bg-surface-1: #f8f9fa;
+  --cds-bg-surface-2: #e0e0e0;
+  --cds-bg-surface-3: #d1d5db;
+  --cds-bg-hover: #e5e7eb;
+  --cds-bg-active: #d1d5db;
+
+  --cds-border-subtle: #e0e0e0;
+  --cds-border-strong: #8d8d8d;
+  --cds-border-interactive: #0f62fe;
+
+  --cds-text-primary: #161616;
+  --cds-text-secondary: #525252;
+  --cds-text-muted: #6f6f6f;
+  --cds-text-inverse: #ffffff;
+
+  --cds-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
+  --cds-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --cds-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
+  --cds-glow-blue: 0 0 16px rgba(15, 98, 254, 0.2);
+}
+
+/* Cyber High-Contrast Theme */
+[data-theme="cyber"] {
+  --cds-bg-body: #050508;
+  --cds-bg-surface-0: #0a0e17;
+  --cds-bg-surface-1: #101626;
+  --cds-bg-surface-2: #162035;
+  --cds-bg-surface-3: #1f2d4a;
+  --cds-bg-hover: #26385c;
+  --cds-bg-active: #314875;
+
+  --cds-border-subtle: #1e3a8a;
+  --cds-border-strong: #00f0ff;
+  --cds-border-interactive: #00f0ff;
+
+  --cds-text-primary: #e0f2fe;
+  --cds-text-secondary: #93c5fd;
+  --cds-text-muted: #60a5fa;
+  --cds-text-inverse: #050508;
+
+  --cds-blue: #00f0ff;
+  --cds-blue-hover: #00c8d7;
+  --cds-cyan: #38bdf8;
+  --cds-green: #00ff66;
+  --cds-green-light: #39ff14;
+  --cds-glow-blue: 0 0 20px rgba(0, 240, 255, 0.5);
+}
+
+/* Reset & Box Sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--cds-bg-body);
+  color: var(--cds-text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  user-select: none;
+}
+
+/* Monospace Utilities */
+.mono {
+  font-family: var(--font-mono);
+  letter-spacing: -0.02em;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--cds-bg-surface-0);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--cds-border-strong);
+  border-radius: var(--cds-radius-xs);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--cds-blue);
+}
+
+/* ==========================================================================
+   APP SHELL LAYOUT
+   ========================================================================== */
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--cds-bg-body);
+}
+
+/* Top Navigation Bar */
+.ibm-header {
+  height: 56px;
+  background-color: var(--cds-bg-surface-0);
+  border-bottom: 1px solid var(--cds-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.ibm-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ibm-bars-icon {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.ibm-title-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.ibm-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--cds-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ibm-edition-badge {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  background: rgba(15, 98, 254, 0.15);
+  color: var(--cds-blue-light);
+  border: 1px solid rgba(15, 98, 254, 0.4);
+  padding: 1px 6px;
+  border-radius: var(--cds-radius-xs);
+}
+
+.ibm-subtitle {
+  font-size: 11px;
+  color: var(--cds-text-muted);
+}
+
+.ibm-header-telemetry {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Telemetry Badge */
+.telemetry-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--cds-bg-surface-1);
+  border: 1px solid var(--cds-border-subtle);
+  padding: 4px 10px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--cds-text-secondary);
+  border-radius: var(--cds-radius-xs);
+}
+
+.status-dot-green {
+  width: 8px;
+  height: 8px;
+  background-color: var(--cds-green-light);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--cds-green-light);
+  animation: pulse-dot 2s infinite ease-in-out;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.85); }
+}
+
+.read-only-shield {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 157, 154, 0.15);
+  border: 1px solid rgba(0, 157, 154, 0.5);
+  color: var(--cds-teal);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--cds-radius-xs);
+}
+
+/* Header Action Controls */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.select-control {
+  background-color: var(--cds-bg-surface-1);
+  color: var(--cds-text-primary);
+  border: 1px solid var(--cds-border-subtle);
+  padding: 6px 10px;
+  font-size: 12px;
+  font-family: var(--font-sans);
+  border-radius: var(--cds-radius-xs);
+  cursor: pointer;
+  outline: none;
+  transition: var(--cds-transition);
+}
+
+.select-control:focus {
+  border-color: var(--cds-blue);
+  box-shadow: 0 0 0 1px var(--cds-blue);
+}
+
+.btn-icon {
+  background-color: var(--cds-bg-surface-1);
+  border: 1px solid var(--cds-border-subtle);
+  color: var(--cds-text-secondary);
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--cds-radius-xs);
+  cursor: pointer;
+  transition: var(--cds-transition);
+}
+
+.btn-icon:hover {
+  background-color: var(--cds-bg-hover);
+  color: var(--cds-text-primary);
+  border-color: var(--cds-border-strong);
+}
+
+.btn-icon.active {
+  background-color: var(--cds-blue);
+  color: #ffffff;
+  border-color: var(--cds-blue);
+}
+
+/* ==========================================================================
+   MAIN WORKSPACE & SIDEBAR
+   ========================================================================== */
+.workspace-layout {
+  display: flex;
+  flex: 1;
+  min-height: calc(100vh - 56px);
+}
+
+/* IBM Sidebar */
+.ibm-sidebar {
+  width: 260px;
+  background-color: var(--cds-bg-surface-0);
+  border-right: 1px solid var(--cds-border-subtle);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px 0;
+  flex-shrink: 0;
+}
+
+.sidebar-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  list-style: none;
+}
+
+.nav-item-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: transparent;
+  border: none;
+  border-left: 3px solid transparent;
+  color: var(--cds-text-secondary);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition: var(--cds-transition);
+}
+
+.nav-item-btn:hover {
+  background-color: var(--cds-bg-hover);
+  color: var(--cds-text-primary);
+}
+
+.nav-item-btn.active {
+  background-color: var(--cds-bg-surface-1);
+  color: var(--cds-text-primary);
+  font-weight: 600;
+  border-left-color: var(--cds-blue);
+}
+
+.nav-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: var(--cds-blue-light);
+}
+
+.nav-text-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-desc {
+  font-size: 10px;
+  color: var(--cds-text-muted);
+  font-weight: 400;
+}
+
+/* Sidebar Footer Info */
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--cds-border-subtle);
+  font-size: 11px;
+  color: var(--cds-text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sidebar-footer-stat {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+}
+
+/* Main Content Area */
+.main-view-container {
+  flex: 1;
+  padding: 24px;
+  background-color: var(--cds-bg-body);
+  overflow-y: auto;
+}
+
+/* ==========================================================================
+   CARDS & GRID PANELS
+   ========================================================================== */
+.card-panel {
+  background-color: var(--cds-bg-surface-0);
+  border: 1px solid var(--cds-border-subtle);
+  border-radius: var(--cds-radius-xs);
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--cds-shadow-sm);
+  transition: var(--cds-transition);
+}
+
+.card-panel:hover {
+  border-color: var(--cds-border-strong);
+}
+
+.card-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--cds-border-subtle);
+  padding-bottom: 12px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--cds-text-primary);
+}
+
+.card-subtitle {
+  font-size: 12px;
+  color: var(--cds-text-muted);
+  margin-top: 2px;
+}
+
+/* Metric KPI Banner */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.kpi-card {
+  background-color: var(--cds-bg-surface-0);
+  border: 1px solid var(--cds-border-subtle);
+  border-top: 3px solid var(--cds-blue);
+  padding: 16px;
+  border-radius: var(--cds-radius-xs);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kpi-card.green { border-top-color: var(--cds-green-light); }
+.kpi-card.teal { border-top-color: var(--cds-teal); }
+.kpi-card.magenta { border-top-color: var(--cds-magenta); }
+.kpi-card.amber { border-top-color: var(--cds-amber); }
+
+.kpi-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--cds-text-muted);
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.kpi-value {
+  font-size: 24px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--cds-text-primary);
+}
+
+.kpi-subtext {
+  font-size: 11px;
+  color: var(--cds-text-secondary);
+}
+
+/* Buttons */
+.ibm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  border-radius: var(--cds-radius-xs);
+  cursor: pointer;
+  transition: var(--cds-transition);
+}
+
+.ibm-btn-primary {
+  background-color: var(--cds-blue);
+  color: #ffffff;
+}
+
+.ibm-btn-primary:hover {
+  background-color: var(--cds-blue-hover);
+  box-shadow: var(--cds-glow-blue);
+}
+
+.ibm-btn-secondary {
+  background-color: var(--cds-bg-surface-1);
+  color: var(--cds-text-primary);
+  border-color: var(--cds-border-strong);
+}
+
+.ibm-btn-secondary:hover {
+  background-color: var(--cds-bg-hover);
+}
+
+.ibm-btn-danger {
+  background-color: var(--cds-red);
+  color: #ffffff;
+}
+
+.ibm-btn-danger:hover {
+  background-color: #ba1b23;
+}
+
+.ibm-btn-sm {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+/* Badges */
+.ibm-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  border-radius: var(--cds-radius-xs);
+}
+
+.ibm-badge-blue {
+  background: rgba(15, 98, 254, 0.15);
+  color: var(--cds-blue-light);
+  border: 1px solid rgba(15, 98, 254, 0.35);
+}
+
+.ibm-badge-green {
+  background: rgba(36, 161, 72, 0.15);
+  color: var(--cds-green-light);
+  border: 1px solid rgba(36, 161, 72, 0.35);
+}
+
+.ibm-badge-red {
+  background: rgba(218, 30, 40, 0.15);
+  color: var(--cds-red-light);
+  border: 1px solid rgba(218, 30, 40, 0.35);
+}
+
+.ibm-badge-amber {
+  background: rgba(241, 194, 27, 0.15);
+  color: var(--cds-amber);
+  border: 1px solid rgba(241, 194, 27, 0.35);
+}
+
+/* ==========================================================================
+   DATA GRID & TABLES (IBM Carbon Style)
+   ========================================================================== */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--cds-border-subtle);
+  border-radius: var(--cds-radius-xs);
+}
+
+.ibm-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: left;
+}
+
+.ibm-data-table th {
+  background-color: var(--cds-bg-surface-1);
+  color: var(--cds-text-secondary);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 12px 14px;
+  border-bottom: 2px solid var(--cds-border-strong);
+  white-space: nowrap;
+}
+
+.ibm-data-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--cds-border-subtle);
+  color: var(--cds-text-primary);
+  white-space: nowrap;
+}
+
+.ibm-data-table tbody tr:hover {
+  background-color: var(--cds-bg-surface-1);
+}
+
+.pii-masked-chip {
+  background: rgba(241, 194, 27, 0.12);
+  color: var(--cds-amber);
+  border: 1px dashed rgba(241, 194, 27, 0.5);
+  padding: 1px 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  border-radius: var(--cds-radius-xs);
+}
+
+/* ==========================================================================
+   SQL CODE EDITOR & AI ENGINE
+   ========================================================================== */
+.sql-editor-container {
+  background-color: #0d0d0d;
+  border: 1px solid var(--cds-border-strong);
+  border-radius: var(--cds-radius-xs);
+  margin: 12px 0;
+  position: relative;
+}
+
+.sql-editor-header {
+  background-color: #1a1a1a;
+  padding: 8px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #2a2a2a;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #a8a8a8;
+}
+
+.sql-textarea {
+  width: 100%;
+  height: 140px;
+  background-color: transparent;
+  color: #56d364;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  border: none;
+  padding: 14px;
+  resize: vertical;
+  outline: none;
+}
+
+.ai-assistant-box {
+  background: linear-gradient(135deg, rgba(15, 98, 254, 0.08) 0%, rgba(17, 146, 232, 0.04) 100%);
+  border: 1px solid rgba(15, 98, 254, 0.3);
+  padding: 16px;
+  border-radius: var(--cds-radius-xs);
+  margin-bottom: 20px;
+}
+
+.ai-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.ai-badge {
+  background: var(--cds-blue);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--cds-radius-xs);
+  font-family: var(--font-mono);
+}
+
+.ai-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.ai-input {
+  flex: 1;
+  background-color: var(--cds-bg-surface-0);
+  border: 1px solid var(--cds-border-strong);
+  color: var(--cds-text-primary);
+  padding: 10px 14px;
+  font-size: 13px;
+  border-radius: var(--cds-radius-xs);
+  outline: none;
+}
+
+.ai-input:focus {
+  border-color: var(--cds-blue);
+}
+
+/* ==========================================================================
+   MOBILE APP SIMULATOR & DEVICE FRAMES
+   ========================================================================== */
+.simulator-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.device-frame-iphone {
+  width: 390px;
+  height: 820px;
+  background-color: #000000;
+  border: 12px solid #282828;
+  border-radius: 54px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 0 2px #444444;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Dynamic Island */
+.dynamic-island {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 30px;
+  background-color: #000000;
+  border-radius: 20px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+}
+
+.dynamic-island-cam {
+  width: 10px;
+  height: 10px;
+  background: #0a0a1a;
+  border-radius: 50%;
+  border: 1px solid #1a1a2e;
+}
+
+.dynamic-island-sensor {
+  width: 8px;
+  height: 8px;
+  background: #080811;
+  border-radius: 50%;
+}
+
+.device-frame-android {
+  width: 390px;
+  height: 820px;
+  background-color: #050505;
+  border: 10px solid #1e222a;
+  border-radius: 36px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 0 2px #333946;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.android-punch-hole {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  background-color: #000000;
+  border: 1px solid #222;
+  border-radius: 50%;
+  z-index: 999;
+}
+
+.device-screen-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background-color: var(--cds-bg-body);
+  padding-top: 44px; /* clearance for notch */
+  position: relative;
+}
+
+/* Mobile Bottom Navigation Bar (iOS / Android style) */
+.mobile-tab-bar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .ibm-sidebar {
+    display: none;
+  }
+  
+  .main-view-container {
+    padding: 12px 12px 80px 12px;
+  }
+
+  .mobile-tab-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background-color: var(--cds-bg-surface-0);
+    border-top: 1px solid var(--cds-border-subtle);
+    z-index: 990;
+    justify-content: space-around;
+    align-items: center;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .mobile-tab-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    background: transparent;
+    border: none;
+    color: var(--cds-text-muted);
+    font-size: 10px;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    flex: 1;
+    padding: 6px 0;
+  }
+
+  .mobile-tab-btn.active {
+    color: var(--cds-blue-light);
+  }
+}
+
+/* In simulator, also show the mobile-tab-bar inside the frame */
+.device-screen-inner .mobile-tab-bar {
+  display: flex;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: var(--cds-bg-surface-0);
+  border-top: 1px solid var(--cds-border-subtle);
+  z-index: 990;
+}

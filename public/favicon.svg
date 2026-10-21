@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" rx="12" fill="#161616"/>
+  <rect x="8" y="8" width="48" height="48" rx="8" stroke="#0f62fe" stroke-width="2"/>
+  <!-- IBM modern bars -->
+  <rect x="14" y="16" width="36" height="4" fill="#0f62fe"/>
+  <rect x="14" y="24" width="36" height="4" fill="#1192e8"/>
+  <rect x="14" y="32" width="24" height="4" fill="#00b4d8"/>
+  <rect x="42" y="32" width="8" height="4" fill="#42be65"/>
+  <rect x="14" y="40" width="36" height="4" fill="#0f62fe"/>
+  <!-- Accent node -->
+  <circle cx="50" cy="48" r="4" fill="#1192e8"/>
+</svg>
