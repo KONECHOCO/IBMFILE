@@ -69,6 +69,8 @@ async function request(path, { method = "GET", body, auth = true, baseUrl } = {}
     throw new GatewayError("NETWORK", 0);
   }
   const data = await res.json().catch(() => null);
+  // A proxy in front of a stopped gateway (Vite dev server, nginx) answers 502-504 without JSON.
+  if (!data && [502, 503, 504].includes(res.status)) throw new GatewayError("NETWORK", res.status);
   if (!res.ok) {
     if (res.status === 401 && auth) onUnauthorized();
     const detail = data?.detail;

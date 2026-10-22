@@ -104,7 +104,7 @@ export default function GatewayLogin({ lang, setLang, translations, onLoggedIn }
             <span style={{ color: "var(--cds-green-light)" }}>
               <ShieldCheck size={12} style={{ verticalAlign: "-2px" }} /> {health.product} {health.version}
             </span>
-          ) : u.gatewayHelp}
+          ) : checking ? u.testing : u.gatewayHelp}
         </div>
 
         {health && (
