@@ -16,7 +16,7 @@ import {
   Pause,
   Trash2
 } from "lucide-react";
-import { MOCK_SCHEDULE_JOBS } from "../data/mockDatabase";
+import { MOCK_SCHEDULE_JOBS } from "../data/previewSamples";
 
 export default function USchedule({ lang, translations, onLogActivity }) {
   const t = translations[lang]?.uSchedule || translations.en.uSchedule;
@@ -43,7 +43,7 @@ export default function USchedule({ lang, translations, onLogActivity }) {
 
       if (onLogActivity) {
         onLogActivity({
-          user: "U-Schedule Engine",
+          user: "Scheduler",
           role: "Automated Scheduler",
           dbTarget: "IBM i (AS/400)",
           action: "Report Esportato",
@@ -82,7 +82,7 @@ export default function USchedule({ lang, translations, onLogActivity }) {
       onLogActivity({
         user: "Current Operator",
         role: "Job Administrator",
-        dbTarget: "U-Schedule Engine",
+        dbTarget: "Scheduler",
         action: "Pianificazione Creata",
         statement: `SCHEDULE CREATED: ${newJob.name} (${newJob.frequency})`,
         rows: 1,
@@ -105,6 +105,9 @@ export default function USchedule({ lang, translations, onLogActivity }) {
 
   return (
     <div className="uschedule-root">
+      <div className="card-panel" style={{ padding: "10px 14px", fontSize: "12px", background: "rgba(241, 194, 27, 0.08)", borderColor: "rgba(241, 194, 27, 0.35)" }}>
+        <strong>{(translations[lang] || translations.en).ui.previewNotice}</strong>
+      </div>
       {/* Header */}
       <div className="card-panel-header" style={{ marginBottom: "20px" }}>
         <div>
@@ -261,7 +264,7 @@ export default function USchedule({ lang, translations, onLogActivity }) {
             {t.scheduledJobs}
           </span>
           <span className="mono" style={{ fontSize: "11px", color: "var(--cds-text-muted)" }}>
-            Engine U-Schedule v4.2 &bull; Cron Daemon Attivo
+            Scheduler (preview)
           </span>
         </div>
 

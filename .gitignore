@@ -32,3 +32,9 @@ dist-ssr
 .gemini
 .agents
 *.tmp
+
+# Plexa DB Gateway
+gateway/.venv
+gateway/data
+__pycache__
+.pytest_cache

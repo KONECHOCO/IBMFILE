@@ -1,42 +1,58 @@
-import React, { useState, useEffect } from "react";
-import { 
-  Layers, 
-  Search, 
-  FileCode, 
-  FolderTree, 
-  Shield, 
-  Lock, 
-  GitBranch, 
-  ArrowRight, 
-  Database,
-  Tag,
-  Key
-} from "lucide-react";
-import { MOCK_TABLES } from "../data/mockDatabase";
+import React, { useEffect, useState } from "react";
+import { Layers, Search, FolderTree, FileCode, Lock, Database, AlertCircle } from "lucide-react";
+import { api } from "../api/gateway";
+
+const PII_PATTERN = /(E_?MAIL|PHONE|TELEF|CELL|TAX|CODICE_?FISC|CODFIS|FISCAL|IBAN|CARD|CARTA|SALARY|SALARIO|STIPEND|PASSWORD|SSN|BIRTH|NASCITA)/i;
 
 export default function UMetadocs({ lang, translations, activeDb }) {
-  const t = translations[lang]?.uMetadocs || translations.en.uMetadocs;
+  const tr = translations[lang] || translations.en;
+  const t = tr.uMetadocs;
+  const u = tr.ui;
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const allTables = MOCK_TABLES[activeDb.id] || [];
-  const [selectedTable, setSelectedTable] = useState(allTables[0]);
+  const [schemas, setSchemas] = useState([]);
+  const [schema, setSchema] = useState(activeDb?.defaultSchema || "");
+  const [tables, setTables] = useState([]);
+  const [selected, setSelected] = useState(null);
+  const [columns, setColumns] = useState([]);
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const describe = (e) => (e.message === "NETWORK" ? u.gatewayUnreachable : e.message);
 
   useEffect(() => {
-    const tables = MOCK_TABLES[activeDb.id] || [];
-    if (tables.length > 0) {
-      setSelectedTable(tables[0]);
-    }
-  }, [activeDb.id]);
+    setSchema(activeDb?.defaultSchema || "");
+    setSchemas([]);
+    if (!activeDb) return;
+    api.schemas(activeDb.id).then(setSchemas).catch((e) => setError(describe(e)));
+  }, [activeDb?.id]);
 
-  const filteredTables = allTables.filter(tbl => {
-    return tbl.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-           tbl.description.toLowerCase().includes(searchQuery.toLowerCase());
-  });
+  useEffect(() => {
+    if (!activeDb || !schema) return;
+    setLoading(true);
+    setError(null);
+    setSelected(null);
+    api.tables(activeDb.id, schema)
+      .then((rows) => { setTables(rows); setSelected(rows[0] || null); })
+      .catch((e) => { setTables([]); setError(describe(e)); })
+      .finally(() => setLoading(false));
+  }, [activeDb?.id, schema]);
+
+  useEffect(() => {
+    if (!activeDb || !selected) { setColumns([]); return; }
+    api.columns(activeDb.id, schema, selected.name).then(setColumns).catch((e) => setError(describe(e)));
+  }, [activeDb?.id, schema, selected?.name]);
+
+  if (!activeDb) {
+    return <div className="card-panel" style={{ padding: "40px", textAlign: "center" }}>{u.noActiveConnection}</div>;
+  }
+
+  const s = search.toLowerCase();
+  const filtered = tables.filter((tb) => tb.name.toLowerCase().includes(s) || (tb.description || "").toLowerCase().includes(s));
 
   return (
     <div className="umetadocs-root">
-      {/* Header */}
-      <div className="card-panel-header" style={{ marginBottom: "20px" }}>
+      <div className="card-panel-header" style={{ marginBottom: "20px", flexWrap: "wrap", gap: "12px" }}>
         <div>
           <h1 className="card-title">
             <Layers size={20} color="var(--cds-blue-light)" />
@@ -44,185 +60,94 @@ export default function UMetadocs({ lang, translations, activeDb }) {
           </h1>
           <p className="card-subtitle">{t.subtitle}</p>
         </div>
-
         <span className="ibm-badge ibm-badge-blue">
-          CATALOGO V7R5 SINCRO LIVE
+          <Database size={12} style={{ marginRight: "4px" }} />
+          {activeDb.name}
         </span>
       </div>
 
-      {/* Search Input */}
-      <div className="card-panel" style={{ padding: "12px 16px", marginBottom: "16px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+      <div className="card-panel" style={{ padding: "12px 16px", display: "flex", flexWrap: "wrap", gap: "12px", alignItems: "center" }}>
+        <label style={{ fontSize: "12px", display: "flex", alignItems: "center", gap: "6px" }}>
+          <FolderTree size={14} /> {t.libraries}
+          {schemas.length > 0 ? (
+            <select className="select-control mono" value={schema} onChange={(e) => setSchema(e.target.value)}>
+              {!schemas.includes(schema) && schema && <option value={schema}>{schema}</option>}
+              {schemas.map((x) => <option key={x} value={x}>{x}</option>)}
+            </select>
+          ) : (
+            <input className="ai-input mono" style={{ width: "140px", padding: "6px 8px" }} defaultValue={schema}
+              onBlur={(e) => setSchema(e.target.value.trim())} />
+          )}
+        </label>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", flex: 1, minWidth: "200px" }}>
           <Search size={16} style={{ color: "var(--cds-text-muted)" }} />
-          <input 
-            type="text" 
-            className="ai-input"
-            placeholder={t.searchMeta}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            style={{ width: "100%", border: "none", background: "transparent" }}
-          />
+          <input className="ai-input" style={{ width: "100%", padding: "6px 10px" }} placeholder={t.searchMeta}
+            value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
       </div>
 
-      {/* Main Layout: Schema Tree on Left, Column Dictionary on Right */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "20px", marginBottom: "24px" }}>
-        {/* Left: Files / Tables Browser */}
-        <div className="card-panel" style={{ margin: 0 }}>
-          <div className="card-panel-header">
-            <span className="card-title" style={{ fontSize: "14px" }}>
-              <FolderTree size={16} color="var(--cds-blue-light)" />
-              {t.physicalFiles}
-            </span>
-            <span className="mono" style={{ fontSize: "11px", color: "var(--cds-text-muted)" }}>
-              {filteredTables.length} Archivi
-            </span>
-          </div>
+      {error && (
+        <div className="ibm-badge ibm-badge-red" style={{ display: "flex", width: "100%", padding: "8px 12px", marginBottom: "12px", borderRadius: "2px", whiteSpace: "normal" }}>
+          <AlertCircle size={15} style={{ marginRight: "8px", flexShrink: 0 }} />
+          {error}
+        </div>
+      )}
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-            {filteredTables.map(tbl => (
-              <button
-                key={tbl.id}
-                onClick={() => setSelectedTable(tbl)}
-                style={{
-                  textAlign: "left",
-                  padding: "10px 14px",
-                  background: selectedTable?.id === tbl.id ? "var(--cds-bg-surface-2)" : "var(--cds-bg-surface-1)",
-                  border: `1px solid ${selectedTable?.id === tbl.id ? "var(--cds-blue)" : "var(--cds-border-subtle)"}`,
-                  borderRadius: "2px",
-                  cursor: "pointer",
-                  color: "inherit",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center"
-                }}
-              >
-                <div>
-                  <div className="mono" style={{ fontWeight: 600, fontSize: "13px", color: selectedTable?.id === tbl.id ? "var(--cds-blue-light)" : "var(--cds-text-primary)" }}>
-                    {tbl.name}
-                  </div>
-                  <div style={{ fontSize: "11px", color: "var(--cds-text-muted)" }}>
-                    {tbl.description}
-                  </div>
-                </div>
-                <span className="ibm-badge ibm-badge-secondary" style={{ fontSize: "10px" }}>
-                  {tbl.type}
-                </span>
-              </button>
-            ))}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "16px", alignItems: "flex-start" }}>
+        <div className="card-panel" style={{ margin: 0, flex: "1 1 240px", minWidth: 0, maxHeight: "70vh", overflowY: "auto" }}>
+          <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--cds-text-muted)", marginBottom: "8px" }}>
+            {t.physicalFiles} {loading ? "…" : `(${filtered.length})`}
           </div>
+          {filtered.map((tb) => (
+            <button key={tb.name} onClick={() => setSelected(tb)} className="nav-item-btn"
+              style={{ width: "100%", textAlign: "left", padding: "6px 8px", borderLeft: `3px solid ${selected?.name === tb.name ? "var(--cds-blue)" : "transparent"}` }}>
+              <FileCode size={14} style={{ flexShrink: 0 }} />
+              <div className="nav-text-col" style={{ minWidth: 0 }}>
+                <span className="mono">{tb.name}</span>
+                <span className="nav-desc">{[tb.type, tb.description].filter(Boolean).join(" · ")}</span>
+              </div>
+            </button>
+          ))}
         </div>
 
-        {/* Right: Selected Table Field Dictionary */}
-        <div className="card-panel" style={{ margin: 0, flex: 2 }}>
-          <div className="card-panel-header">
-            <div>
-              <span className="card-title" style={{ fontSize: "14px" }}>
-                <FileCode size={16} color="var(--cds-teal)" />
-                Dizionario Colonne: {selectedTable?.name}
-              </span>
-              <span style={{ fontSize: "11px", color: "var(--cds-text-muted)" }}>
-                {selectedTable?.description}
-              </span>
-            </div>
-            <span className="ibm-badge ibm-badge-green">
-              {selectedTable?.columns.length} Colonne Verificate
-            </span>
-          </div>
-
-          <div className="table-container">
-            <table className="ibm-data-table">
-              <thead>
-                <tr>
-                  <th>{t.fieldName}</th>
-                  <th>{t.fieldDesc}</th>
-                  <th>{t.dataType}</th>
-                  <th>{t.sensitivity}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {selectedTable?.columns.map(col => (
-                  <tr key={col.name}>
-                    <td>
-                      <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                        <span className="mono" style={{ fontWeight: 600 }}>{col.name}</span>
-                        {col.pk && <Key size={12} color="var(--cds-amber)" title="Primary Key" />}
-                      </div>
-                    </td>
-                    <td style={{ fontSize: "12px" }}>{col.desc}</td>
-                    <td>
-                      <span className="mono" style={{ fontSize: "11px", color: "var(--cds-blue-light)" }}>
-                        {col.type}
-                      </span>
-                    </td>
-                    <td>
-                      {col.pii ? (
-                        <span className="ibm-badge ibm-badge-amber" style={{ fontSize: "10px" }}>
-                          <Lock size={10} />
-                          Sensibile PII (GDPR)
-                        </span>
-                      ) : (
-                        <span className="ibm-badge ibm-badge-secondary" style={{ fontSize: "10px" }}>
-                          Aziendale Standard
-                        </span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      {/* SECTION: VISUAL DATA LINEAGE FLOW */}
-      <div className="card-panel">
-        <div className="card-panel-header">
-          <div>
-            <span className="card-title" style={{ fontSize: "14px" }}>
-              <GitBranch size={16} color="var(--cds-magenta)" />
-              {t.lineageTitle}
-            </span>
-            <p className="card-subtitle">{t.lineageDesc}</p>
-          </div>
-          <span className="ibm-badge ibm-badge-blue">AUDIT GRAPH</span>
-        </div>
-
-        {/* Visual Flow diagram nodes */}
-        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "14px", padding: "16px 0" }}>
-          {/* Node 1: Physical File on IBM i */}
-          <div style={{ background: "var(--cds-bg-surface-1)", border: "1px solid var(--cds-border-strong)", borderLeft: "4px solid var(--cds-blue)", padding: "14px", borderRadius: "2px", flex: 1, minWidth: "180px" }}>
-            <div style={{ fontSize: "10px", color: "var(--cds-text-muted)", textTransform: "uppercase", fontWeight: 700 }}>1. Origine Dati</div>
-            <div className="mono" style={{ fontWeight: 700, fontSize: "13px", marginTop: "2px" }}>PRODLIB / CUSTMAST</div>
-            <div style={{ fontSize: "11px", color: "var(--cds-text-secondary)" }}>File Fisico Db2/400 (LPAR)</div>
-          </div>
-
-          <ArrowRight size={18} color="var(--cds-border-strong)" />
-
-          {/* Node 2: Logical View */}
-          <div style={{ background: "var(--cds-bg-surface-1)", border: "1px solid var(--cds-border-strong)", borderLeft: "4px solid var(--cds-teal)", padding: "14px", borderRadius: "2px", flex: 1, minWidth: "180px" }}>
-            <div style={{ fontSize: "10px", color: "var(--cds-text-muted)", textTransform: "uppercase", fontWeight: 700 }}>2. Vista di Governance</div>
-            <div className="mono" style={{ fontWeight: 700, fontSize: "13px", marginTop: "2px" }}>CUSTBAL_V (Logical File)</div>
-            <div style={{ fontSize: "11px", color: "var(--cds-text-secondary)" }}>Perimetro Sola Lettura &amp; Masking</div>
-          </div>
-
-          <ArrowRight size={18} color="var(--cds-border-strong)" />
-
-          {/* Node 3: U-Query Central Approved Definition */}
-          <div style={{ background: "var(--cds-bg-surface-1)", border: "1px solid var(--cds-border-strong)", borderLeft: "4px solid var(--cds-magenta)", padding: "14px", borderRadius: "2px", flex: 1, minWidth: "180px" }}>
-            <div style={{ fontSize: "10px", color: "var(--cds-text-muted)", textTransform: "uppercase", fontWeight: 700 }}>3. Query IT Certificata</div>
-            <div className="mono" style={{ fontWeight: 700, fontSize: "13px", marginTop: "2px" }}>QRY_OVERDUE_50K</div>
-            <div style={{ fontSize: "11px", color: "var(--cds-text-secondary)" }}>Filtraggio Conti &gt; 50.000€</div>
-          </div>
-
-          <ArrowRight size={18} color="var(--cds-border-strong)" />
-
-          {/* Node 4: U-Schedule Dispatch */}
-          <div style={{ background: "var(--cds-bg-surface-1)", border: "1px solid var(--cds-border-strong)", borderLeft: "4px solid var(--cds-green-light)", padding: "14px", borderRadius: "2px", flex: 1, minWidth: "180px" }}>
-            <div style={{ fontSize: "10px", color: "var(--cds-text-muted)", textTransform: "uppercase", fontWeight: 700 }}>4. Distribuzione Report</div>
-            <div className="mono" style={{ fontWeight: 700, fontSize: "13px", marginTop: "2px" }}>U-Schedule (Cron: Lunedì)</div>
-            <div style={{ fontSize: "11px", color: "var(--cds-text-secondary)" }}>Excel cifrato &bull; SMTP Direzione Finanza</div>
-          </div>
+        <div className="card-panel" style={{ margin: 0, flex: "3 1 420px", minWidth: 0 }}>
+          {selected ? (
+            <>
+              <div className="card-panel-header">
+                <span className="card-title mono" style={{ fontSize: "15px" }}>{schema}.{selected.name}</span>
+                <span className="ibm-badge ibm-badge-secondary">{selected.type}</span>
+              </div>
+              {selected.description && <p style={{ fontSize: "12px", color: "var(--cds-text-secondary)", marginTop: 0 }}>{selected.description}</p>}
+              <div className="table-container">
+                <table className="ibm-data-table">
+                  <thead>
+                    <tr>
+                      <th>{t.fieldName}</th>
+                      <th>{t.dataType}</th>
+                      <th>{t.length}</th>
+                      <th>{u.nullable}</th>
+                      <th>{t.fieldDesc}</th>
+                      <th>{t.sensitivity}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {columns.map((c) => (
+                      <tr key={c.name}>
+                        <td className="mono" style={{ fontWeight: 600 }}>{c.name}</td>
+                        <td className="mono">{c.type}</td>
+                        <td className="mono">{c.length ?? ""}{c.scale ? `,${c.scale}` : ""}</td>
+                        <td className="mono">{c.nullable}</td>
+                        <td style={{ fontSize: "12px" }}>{c.description}</td>
+                        <td>{PII_PATTERN.test(c.name) && <span className="ibm-badge ibm-badge-amber"><Lock size={10} style={{ marginRight: "3px" }} />PII</span>}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          ) : (
+            <div style={{ padding: "30px", textAlign: "center", color: "var(--cds-text-muted)" }}>{u.noTables}</div>
+          )}
         </div>
       </div>
     </div>

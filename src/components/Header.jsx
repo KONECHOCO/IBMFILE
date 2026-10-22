@@ -10,8 +10,11 @@ import {
   Terminal,
   Activity,
   KeyRound,
-  Settings2
+  Settings2,
+  LogOut,
+  User
 } from "lucide-react";
+import BrandMark from "./BrandMark";
 
 export default function Header({
   lang,
@@ -22,27 +25,22 @@ export default function Header({
   platformMode,
   setPlatformMode,
   activeDb,
-  userRole,
-  setUserRole,
+  user,
+  onLogout,
   setCurrentTab
 }) {
   const t = translations[lang] || translations.en;
+  const u = t.ui;
 
   return (
     <header className="ibm-header">
       {/* Brand & System ID */}
       <div className="ibm-brand">
-        <svg className="ibm-bars-icon" viewBox="0 0 40 40" fill="none">
-          <rect width="40" height="40" rx="4" fill="#0f62fe" />
-          <rect x="6" y="8" width="28" height="3" fill="#ffffff" />
-          <rect x="6" y="14" width="28" height="3" fill="#ffffff" />
-          <rect x="6" y="20" width="28" height="3" fill="#ffffff" />
-          <rect x="6" y="26" width="28" height="3" fill="#ffffff" />
-        </svg>
+        <BrandMark className="ibm-bars-icon" />
         <div className="ibm-title-group">
           <div className="ibm-title">
             <span>{t.systemTitle}</span>
-            <span className="ibm-edition-badge">IBM i &bull; MULTI-DB</span>
+            <span className="ibm-edition-badge">MULTI-DB</span>
           </div>
           <span className="ibm-subtitle">{t.tagline}</span>
         </div>
@@ -54,10 +52,10 @@ export default function Header({
           className="telemetry-chip" 
           onClick={() => setCurrentTab && setCurrentTab("dbSettings")}
           style={{ cursor: "pointer", border: "1px solid var(--cds-border-subtle)", background: "var(--cds-bg-surface-1)" }}
-          title="Clicca per Gestire Credenziali e Parametri Database"
+          title={u.manageConnections}
         >
-          <span className="status-dot-green"></span>
-          <span className="mono">{activeDb.name} : {activeDb.port}</span>
+          <span className={activeDb ? "status-dot-green" : ""}></span>
+          <span className="mono">{activeDb ? activeDb.name : u.noActiveConnection}</span>
           <KeyRound size={12} style={{ marginLeft: "4px", color: "var(--cds-blue-light)" }} />
         </button>
 
@@ -73,28 +71,25 @@ export default function Header({
         <button 
           className="btn-icon"
           onClick={() => setCurrentTab && setCurrentTab("dbSettings")}
-          title="Impostazioni & Credenziali Database"
+          title={u.manageConnections}
         >
           <KeyRound size={16} color="var(--cds-blue-light)" />
         </button>
 
-        {/* User Role Selector (Demonstrates Dynamic PII Masking) */}
-        <select 
-          className="select-control mono"
-          value={userRole}
-          onChange={(e) => setUserRole(e.target.value)}
-          title="Simulate Role-Based Permissions"
-        >
-          <option value="analyst">Role: Data Analyst (Masked PII)</option>
-          <option value="admin">Role: Sec Admin (Full Access)</option>
-          <option value="auditor">Role: Compliance Auditor</option>
-        </select>
+        {/* Signed-in gateway user */}
+        <span className="telemetry-chip mono header-user-chip" title={u.roles[user?.role] || user?.role}>
+          <User size={12} />
+          {user?.username} · {u.roles[user?.role] || user?.role}
+        </span>
+        <button className="btn-icon" onClick={onLogout} title={u.signOut}>
+          <LogOut size={16} />
+        </button>
 
         {/* Platform View: Desktop vs Mobile App Simulator */}
         <button 
-          className={`btn-icon ${platformMode !== "desktop" ? "active" : ""}`}
+          className={`btn-icon header-simulator-btn ${platformMode !== "desktop" ? "active" : ""}`}
           onClick={() => setPlatformMode(platformMode === "desktop" ? "iphone" : "desktop")}
-          title={platformMode === "desktop" ? "Switch to Mobile App Simulator" : "Switch to Desktop Browser"}
+          title={platformMode === "desktop" ? u.mobilePreview : u.exitSimulator}
         >
           {platformMode === "desktop" ? <Smartphone size={16} /> : <Monitor size={16} />}
         </button>

@@ -92,7 +92,7 @@ npx cap open android`;
             <Apple size={22} color="#ffffff" />
             <div>
               <strong style={{ fontSize: "14px" }}>Apple App Store (iOS / iPadOS)</strong>
-              <div style={{ fontSize: "11px", color: "var(--cds-text-muted)" }}>Bundle ID: com.ibmfile.enterprise &bull; ibmfile.com</div>
+              <div style={{ fontSize: "11px", color: "var(--cds-text-muted)" }}>Bundle ID: com.ikonet.plexadb</div>
             </div>
           </div>
           <ul style={{ listStyle: "none", fontSize: "12px", display: "flex", flexDirection: "column", gap: "8px" }}>

@@ -1,6 +1,6 @@
 {
-  "appId": "com.ibmfile.enterprise",
-  "appName": "IBMFILE",
+  "appId": "com.ikonet.plexadb",
+  "appName": "Plexa DB",
   "webDir": "dist",
   "server": {
     "androidScheme": "https"

@@ -1,17 +1,22 @@
 {
-  "short_name": "IBMFILE",
-  "name": "IBMFILE Enterprise — Governed Data Platform (ibmfile.com)",
+  "short_name": "Plexa DB",
+  "name": "Plexa DB — Multi-database SQL client",
   "icons": [
     {
       "src": "/favicon.svg",
       "type": "image/svg+xml",
-      "sizes": "192x192 512x512"
+      "sizes": "any",
+      "purpose": "any"
     }
   ],
   "start_url": "/",
   "background_color": "#161616",
   "theme_color": "#0f62fe",
   "display": "standalone",
-  "orientation": "portrait-primary",
-  "categories": ["business", "productivity", "utilities"]
+  "orientation": "any",
+  "categories": [
+    "business",
+    "productivity",
+    "utilities"
+  ]
 }

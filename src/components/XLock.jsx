@@ -14,7 +14,7 @@ import {
   Trash2,
   FileCheck2
 } from "lucide-react";
-import { MOCK_XLOCK_DATA } from "../data/mockDatabase";
+import { MOCK_XLOCK_DATA } from "../data/previewSamples";
 
 export default function XLock({ lang, translations, onLogActivity }) {
   const t = translations[lang]?.xLock || translations.en.xLock;
@@ -47,7 +47,7 @@ export default function XLock({ lang, translations, onLogActivity }) {
       onLogActivity({
         user: "admin_sec",
         role: "Security Officer",
-        dbTarget: "X-Lock 446 Guard",
+        dbTarget: "Port Guard",
         action: "Regola Modificata",
         statement: `ADDED TO WHITELIST: ${entry.ip} (${entry.label})`,
         rows: 1,
@@ -67,6 +67,9 @@ export default function XLock({ lang, translations, onLogActivity }) {
 
   return (
     <div className="xlock-root">
+      <div className="card-panel" style={{ padding: "10px 14px", fontSize: "12px", background: "rgba(241, 194, 27, 0.08)", borderColor: "rgba(241, 194, 27, 0.35)" }}>
+        <strong>{(translations[lang] || translations.en).ui.previewNotice}</strong>
+      </div>
       {/* Page Header */}
       <div className="card-panel-header" style={{ marginBottom: "20px" }}>
         <div>
@@ -100,7 +103,7 @@ export default function XLock({ lang, translations, onLogActivity }) {
         <div className="kpi-card magenta">
           <span className="kpi-label">{t.avgLatency}</span>
           <span className="kpi-value">1.4 ms</span>
-          <span className="kpi-subtext">IBM Power10 DRDA Pipeline</span>
+          <span className="kpi-subtext">DRDA</span>
         </div>
 
         <div className="kpi-card amber">
