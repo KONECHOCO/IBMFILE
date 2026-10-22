@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Settings2, Users, KeyRound, Server, Copy, Check, Trash2, UserPlus, RefreshCw, ShieldCheck, ShieldAlert } from "lucide-react";
+import { Settings2, Users, KeyRound, Server, Copy, Check, Trash2, UserPlus, RefreshCw, ShieldCheck, ShieldAlert, Smartphone, AlertTriangle } from "lucide-react";
+import QRCode from "qrcode";
 import { api } from "../api/gateway";
 
 const ROLES = ["admin", "analyst", "viewer"];
@@ -199,6 +200,58 @@ function LicenseTab({ u, info, reload }) {
   );
 }
 
+function DevicesTab({ u, info }) {
+  const urls = info?.gatewayUrls || [];
+  const [url, setUrl] = useState(urls[0] || "");
+  const [qr, setQr] = useState(null);
+
+  useEffect(() => {
+    if (!url.trim()) { setQr(null); return; }
+    // The QR holds the plain gateway URL: the Plexa DB app reads it, and a phone camera
+    // opens the same address in the browser (web version) when the app is not installed.
+    QRCode.toDataURL(url.trim(), { margin: 2, width: 260, errorCorrectionLevel: "M" }).then(setQr).catch(() => setQr(null));
+  }, [url]);
+
+  if (!info) return null;
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: "20px", alignItems: "flex-start" }}>
+      <div style={{ flex: "1 1 280px", minWidth: 0 }}>
+        <p style={{ fontSize: "12px", color: "var(--cds-text-secondary)", marginTop: 0 }}>{u.devicesIntro}</p>
+        {!info.listensOnNetwork && (
+          <div className="card-panel" style={{ padding: "10px 12px", fontSize: "12px", background: "rgba(241, 194, 27, 0.08)", borderColor: "rgba(241, 194, 27, 0.35)" }}>
+            <AlertTriangle size={14} style={{ verticalAlign: "-2px", marginRight: "6px", color: "var(--cds-amber)" }} />
+            {u.localOnlyWarning} <code className="mono">PLEXA_HOST=0.0.0.0</code>
+          </div>
+        )}
+        <label style={{ display: "block", fontSize: "12px", fontWeight: 600, margin: "8px 0 4px" }}>{u.gatewayAddressForDevices}</label>
+        {urls.length > 0 && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "6px" }}>
+            {urls.map((x) => (
+              <button key={x} className={`ibm-badge ${x === url ? "ibm-badge-blue" : "ibm-badge-secondary"}`} style={{ cursor: "pointer", padding: "4px 8px" }}
+                onClick={() => setUrl(x)}>{x}</button>
+            ))}
+          </div>
+        )}
+        <input className="ai-input mono" style={{ width: "100%" }} value={url} onChange={(e) => setUrl(e.target.value)}
+          placeholder="http://192.168.1.20:8787" autoCapitalize="none" />
+        <div style={{ fontSize: "11px", color: "var(--cds-text-muted)", marginTop: "6px" }}>{u.devicesUrlHelp}</div>
+        <ol style={{ fontSize: "12px", color: "var(--cds-text-secondary)", paddingLeft: "18px" }}>
+          <li>{u.devicesStep1}</li>
+          <li>{u.devicesStep2}</li>
+          <li>{u.devicesStep3}</li>
+        </ol>
+      </div>
+      {qr && (
+        <div style={{ textAlign: "center" }}>
+          <img src={qr} alt={url} width={260} height={260} style={{ background: "#fff", borderRadius: "4px" }} />
+          <div className="mono" style={{ fontSize: "11px", marginTop: "6px", wordBreak: "break-all", maxWidth: "260px" }}>{url}</div>
+          <div style={{ marginTop: "8px" }}><CopyButton text={url} label={u.copy} /></div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function SystemTab({ u, info }) {
   if (!info) return null;
   const supportInfo = JSON.stringify({
@@ -252,7 +305,7 @@ export default function AdminPanel({ lang, translations, user }) {
   const reload = () => api.system().then(setInfo).catch((e) => setError(e.message));
   useEffect(() => { reload(); }, []);
 
-  const tabs = [["users", Users, u.adminUsers], ["license", KeyRound, u.adminLicense], ["system", Server, u.adminSystem]];
+  const tabs = [["users", Users, u.adminUsers], ["devices", Smartphone, u.adminDevices], ["license", KeyRound, u.adminLicense], ["system", Server, u.adminSystem]];
 
   return (
     <div>
@@ -277,6 +330,7 @@ export default function AdminPanel({ lang, translations, user }) {
           ))}
         </div>
         {tab === "users" && <UsersTab u={u} me={user} />}
+        {tab === "devices" && <DevicesTab key={(info?.gatewayUrls || []).join()} u={u} info={info} />}
         {tab === "license" && <LicenseTab u={u} info={info} reload={reload} />}
         {tab === "system" && <SystemTab u={u} info={info} />}
       </div>

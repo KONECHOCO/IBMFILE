@@ -5,10 +5,12 @@
   "server": {
     "androidScheme": "https"
   },
-  "plugins": {
-    "SplashScreen": {
-      "launchShowDuration": 1500,
-      "backgroundColor": "#161616"
-    }
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#161616"
+  },
+  "android": {
+    "backgroundColor": "#161616",
+    "allowMixedContent": true
   }
 }

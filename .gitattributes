@@ -8,3 +8,8 @@
 Dockerfile text eol=lf
 .dockerignore text eol=lf
 .env.example text eol=lf
+gradlew text eol=lf
+*.bat text eol=crlf
+*.pbxproj text eol=lf
+*.plist text eol=lf
+*.swift text eol=lf

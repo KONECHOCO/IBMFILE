@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Server, LogIn, ShieldCheck, AlertCircle, Globe, PlayCircle } from "lucide-react";
+import { Server, LogIn, ShieldCheck, AlertCircle, Globe, PlayCircle, QrCode } from "lucide-react";
+import { canScanQr, scanGatewayUrl } from "../native/scanner";
 import { api, getSession, setAuth, setGatewayUrl } from "../api/gateway";
 import { BRAND } from "../config/brand";
 import BrandMark from "./BrandMark";
@@ -63,6 +64,19 @@ export default function GatewayLogin({ lang, setLang, translations, onLoggedIn }
 
   const enterDemo = () => signIn(() => api.login(health.demoCredentials.username, health.demoCredentials.password));
 
+  const scanQr = async () => {
+    setError(null);
+    try {
+      const url = await scanGatewayUrl(u.scanInstructions);
+      if (url === null) return setError(u.qrNotGateway);
+      setBaseUrl(url);
+      checkGateway(url);
+    } catch (e) {
+      // Cancelling the scanner rejects too: only report real failures.
+      if (!/cancel/i.test(String(e?.message || e))) setError(String(e?.message || e));
+    }
+  };
+
   const tryPublicDemo = () => {
     setBaseUrl(BRAND.demoGatewayUrl);
     checkGateway(BRAND.demoGatewayUrl);
@@ -108,6 +122,12 @@ export default function GatewayLogin({ lang, setLang, translations, onLoggedIn }
             {checking ? "…" : u.check}
           </button>
         </div>
+        {canScanQr() && (
+          <button type="button" className="ibm-btn ibm-btn-secondary ibm-btn-sm" style={{ width: "100%", justifyContent: "center", marginBottom: "6px" }} onClick={scanQr}>
+            <QrCode size={14} />
+            {u.scanGatewayQr}
+          </button>
+        )}
         <div style={{ fontSize: "11px", color: "var(--cds-text-muted)", marginBottom: "16px" }}>
           {health ? (
             <span style={{ color: "var(--cds-green-light)" }}>

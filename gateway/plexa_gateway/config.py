@@ -24,6 +24,12 @@ CORS_ORIGINS = [
     if o.strip()
 ]
 
+HOST = os.environ.get("PLEXA_HOST", "127.0.0.1")
+PORT = int(os.environ.get("PLEXA_PORT", "8787"))
+# Address phones and other PCs should use (e.g. https://plexa.company.com). Shown in the
+# admin QR code before the detected LAN addresses.
+PUBLIC_URL = os.environ.get("PLEXA_PUBLIC_URL", "").rstrip("/")
+
 MAX_ROWS = int(os.environ.get("PLEXA_MAX_ROWS", "5000"))
 QUERY_TIMEOUT_S = int(os.environ.get("PLEXA_QUERY_TIMEOUT", "60"))
 TOKEN_HOURS = int(os.environ.get("PLEXA_TOKEN_HOURS", "12"))

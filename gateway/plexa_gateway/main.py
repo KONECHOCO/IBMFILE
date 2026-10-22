@@ -428,6 +428,31 @@ class LicenseIn(BaseModel):
     key: str = Field(min_length=10, max_length=4000)
 
 
+def _lan_addresses() -> list:
+    """IPv4 addresses of this machine that other devices on the network can use."""
+    import socket
+    found = []
+    try:  # primary interface (no packet is actually sent)
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+            s.connect(("10.255.255.255", 1))
+            found.append(s.getsockname()[0])
+    except OSError:
+        pass
+    try:
+        for info in socket.getaddrinfo(socket.gethostname(), None, socket.AF_INET):
+            found.append(info[4][0])
+    except OSError:
+        pass
+    return [ip for ip in dict.fromkeys(found) if not ip.startswith("127.")]
+
+
+def _gateway_urls() -> list:
+    urls = [config.PUBLIC_URL] if config.PUBLIC_URL else []
+    if config.HOST not in ("127.0.0.1", "localhost", "::1"):
+        urls += [f"http://{ip}:{config.PORT}" for ip in _lan_addresses()]
+    return urls
+
+
 @app.get("/api/admin/system")
 def system_info(_: dict = Depends(admin_user)):
     java_ok, java_problem = drivers.get("ibmi").available()
@@ -443,6 +468,8 @@ def system_info(_: dict = Depends(admin_user)):
         "ibmiProblem": java_problem,
         "audit": store.verify_audit(),
         "publicDemo": config.PUBLIC_DEMO,
+        "gatewayUrls": _gateway_urls(),
+        "listensOnNetwork": config.HOST not in ("127.0.0.1", "localhost", "::1"),
     }
 
 

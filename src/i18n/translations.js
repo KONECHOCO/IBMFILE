@@ -343,7 +343,18 @@ export const translations = {
       "supportTitle": "Informazioni per l'assistenza",
       "supportText": "Copia questo riepilogo e invialo all'assistenza Ikonet: non contiene password né dati dei database.",
       "copySupportInfo": "Copia riepilogo",
-      "lockedOutHelp": "Se nessun amministratore riesce più ad accedere, sul computer del gateway (cartella gateway) si può reimpostare una password con:"
+      "lockedOutHelp": "Se nessun amministratore riesce più ad accedere, sul computer del gateway (cartella gateway) si può reimpostare una password con:",
+      "adminDevices": "Dispositivi",
+      "devicesIntro": "Collega telefoni e altri PC a questo gateway: inquadrano il QR con l'app Plexa DB (oppure con la fotocamera, per aprire la versione web).",
+      "localOnlyWarning": "Il gateway accetta collegamenti solo da questo computer. Per telefoni e altri PC avvialo con",
+      "gatewayAddressForDevices": "Indirizzo del gateway per i dispositivi",
+      "devicesUrlHelp": "Indirizzi trovati sulla rete di questo computer. Da fuori ufficio serve la VPN aziendale o un indirizzo HTTPS pubblicato dal reparto IT.",
+      "devicesStep1": "Installa Plexa DB dall'App Store o da Google Play.",
+      "devicesStep2": "Nella schermata di accesso tocca «Scansiona QR del gateway» e inquadra il codice.",
+      "devicesStep3": "Accedi con il tuo utente di questo gateway.",
+      "scanGatewayQr": "Scansiona QR del gateway",
+      "scanInstructions": "Inquadra il QR in Amministrazione → Dispositivi",
+      "qrNotGateway": "Questo QR non contiene l'indirizzo di un gateway Plexa DB."
     }
   },
   "en": {
@@ -689,7 +700,18 @@ export const translations = {
       "supportTitle": "Support information",
       "supportText": "Copy this summary and send it to Ikonet support: it contains no passwords and no database data.",
       "copySupportInfo": "Copy summary",
-      "lockedOutHelp": "If no administrator can sign in any more, a password can be reset on the gateway computer (gateway folder) with:"
+      "lockedOutHelp": "If no administrator can sign in any more, a password can be reset on the gateway computer (gateway folder) with:",
+      "adminDevices": "Devices",
+      "devicesIntro": "Connect phones and other PCs to this gateway: they scan the QR code with the Plexa DB app (or with the camera, to open the web version).",
+      "localOnlyWarning": "The gateway only accepts connections from this computer. For phones and other PCs start it with",
+      "gatewayAddressForDevices": "Gateway address for devices",
+      "devicesUrlHelp": "Addresses found on this computer's network. Outside the office you need the company VPN or an HTTPS address published by IT.",
+      "devicesStep1": "Install Plexa DB from the App Store or Google Play.",
+      "devicesStep2": "On the sign-in screen tap “Scan gateway QR” and point the camera at the code.",
+      "devicesStep3": "Sign in with your user on this gateway.",
+      "scanGatewayQr": "Scan gateway QR",
+      "scanInstructions": "Point at the QR in Administration → Devices",
+      "qrNotGateway": "This QR code does not contain a Plexa DB gateway address."
     }
   },
   "es": {
@@ -1035,7 +1057,18 @@ export const translations = {
       "supportTitle": "Información para soporte",
       "supportText": "Copia este resumen y envíalo al soporte de Ikonet: no contiene contraseñas ni datos de las bases de datos.",
       "copySupportInfo": "Copiar resumen",
-      "lockedOutHelp": "Si ningún administrador puede acceder, se puede restablecer una contraseña en el equipo del gateway (carpeta gateway) con:"
+      "lockedOutHelp": "Si ningún administrador puede acceder, se puede restablecer una contraseña en el equipo del gateway (carpeta gateway) con:",
+      "adminDevices": "Dispositivos",
+      "devicesIntro": "Conecta teléfonos y otros PC a este gateway: escanean el QR con la app Plexa DB (o con la cámara, para abrir la versión web).",
+      "localOnlyWarning": "El gateway solo acepta conexiones desde este equipo. Para teléfonos y otros PC inícialo con",
+      "gatewayAddressForDevices": "Dirección del gateway para los dispositivos",
+      "devicesUrlHelp": "Direcciones encontradas en la red de este equipo. Fuera de la oficina necesitas la VPN de la empresa o una dirección HTTPS publicada por TI.",
+      "devicesStep1": "Instala Plexa DB desde App Store o Google Play.",
+      "devicesStep2": "En la pantalla de acceso toca «Escanear QR del gateway» y apunta al código.",
+      "devicesStep3": "Accede con tu usuario de este gateway.",
+      "scanGatewayQr": "Escanear QR del gateway",
+      "scanInstructions": "Apunta al QR de Administración → Dispositivos",
+      "qrNotGateway": "Este QR no contiene la dirección de un gateway Plexa DB."
     }
   },
   "fr": {
@@ -1381,7 +1414,18 @@ export const translations = {
       "supportTitle": "Informations pour le support",
       "supportText": "Copiez ce résumé et envoyez-le au support Ikonet : il ne contient ni mot de passe ni données des bases.",
       "copySupportInfo": "Copier le résumé",
-      "lockedOutHelp": "Si plus aucun administrateur ne peut se connecter, un mot de passe peut être réinitialisé sur l'ordinateur de la passerelle (dossier gateway) avec :"
+      "lockedOutHelp": "Si plus aucun administrateur ne peut se connecter, un mot de passe peut être réinitialisé sur l'ordinateur de la passerelle (dossier gateway) avec :",
+      "adminDevices": "Appareils",
+      "devicesIntro": "Connectez téléphones et autres PC à cette passerelle : ils scannent le QR code avec l'app Plexa DB (ou avec l'appareil photo, pour ouvrir la version web).",
+      "localOnlyWarning": "La passerelle n'accepte que les connexions de cet ordinateur. Pour les téléphones et autres PC, démarrez-la avec",
+      "gatewayAddressForDevices": "Adresse de la passerelle pour les appareils",
+      "devicesUrlHelp": "Adresses trouvées sur le réseau de cet ordinateur. Hors du bureau, il faut le VPN de l'entreprise ou une adresse HTTPS publiée par l'informatique.",
+      "devicesStep1": "Installez Plexa DB depuis l'App Store ou Google Play.",
+      "devicesStep2": "Sur l'écran de connexion, touchez « Scanner le QR de la passerelle » et visez le code.",
+      "devicesStep3": "Connectez-vous avec votre utilisateur de cette passerelle.",
+      "scanGatewayQr": "Scanner le QR de la passerelle",
+      "scanInstructions": "Visez le QR dans Administration → Appareils",
+      "qrNotGateway": "Ce QR code ne contient pas l'adresse d'une passerelle Plexa DB."
     }
   },
   "de": {
@@ -1727,7 +1771,18 @@ export const translations = {
       "supportTitle": "Supportinformationen",
       "supportText": "Kopieren Sie diese Übersicht und senden Sie sie an den Ikonet-Support: Sie enthält keine Passwörter und keine Datenbankdaten.",
       "copySupportInfo": "Übersicht kopieren",
-      "lockedOutHelp": "Wenn sich kein Administrator mehr anmelden kann, lässt sich ein Passwort auf dem Gateway-Rechner (Ordner gateway) zurücksetzen mit:"
+      "lockedOutHelp": "Wenn sich kein Administrator mehr anmelden kann, lässt sich ein Passwort auf dem Gateway-Rechner (Ordner gateway) zurücksetzen mit:",
+      "adminDevices": "Geräte",
+      "devicesIntro": "Verbinden Sie Telefone und andere PCs mit diesem Gateway: Sie scannen den QR-Code mit der Plexa-DB-App (oder mit der Kamera, um die Webversion zu öffnen).",
+      "localOnlyWarning": "Das Gateway akzeptiert nur Verbindungen von diesem Computer. Für Telefone und andere PCs starten Sie es mit",
+      "gatewayAddressForDevices": "Gateway-Adresse für Geräte",
+      "devicesUrlHelp": "Im Netzwerk dieses Computers gefundene Adressen. Außerhalb des Büros brauchen Sie das Firmen-VPN oder eine von der IT veröffentlichte HTTPS-Adresse.",
+      "devicesStep1": "Installieren Sie Plexa DB aus dem App Store oder von Google Play.",
+      "devicesStep2": "Tippen Sie auf dem Anmeldebildschirm auf „Gateway-QR scannen“ und richten Sie die Kamera auf den Code.",
+      "devicesStep3": "Melden Sie sich mit Ihrem Benutzer dieses Gateways an.",
+      "scanGatewayQr": "Gateway-QR scannen",
+      "scanInstructions": "Richten Sie die Kamera auf den QR-Code unter Verwaltung → Geräte",
+      "qrNotGateway": "Dieser QR-Code enthält keine Plexa-DB-Gateway-Adresse."
     }
   },
   "ja": {
@@ -2073,7 +2128,18 @@ export const translations = {
       "supportTitle": "サポート用情報",
       "supportText": "この概要をコピーして Ikonet サポートに送ってください。パスワードやデータベースのデータは含まれません。",
       "copySupportInfo": "概要をコピー",
-      "lockedOutHelp": "どの管理者もサインインできない場合は、ゲートウェイのコンピューター（gateway フォルダ）で次のコマンドでパスワードを再設定できます："
+      "lockedOutHelp": "どの管理者もサインインできない場合は、ゲートウェイのコンピューター（gateway フォルダ）で次のコマンドでパスワードを再設定できます：",
+      "adminDevices": "デバイス",
+      "devicesIntro": "スマートフォンや他の PC をこのゲートウェイに接続します。Plexa DB アプリで QR コードを読み取ります（カメラで読み取るとウェブ版が開きます）。",
+      "localOnlyWarning": "ゲートウェイはこのコンピューターからの接続のみ受け付けています。スマートフォンや他の PC から使うには次の設定で起動してください：",
+      "gatewayAddressForDevices": "デバイス用のゲートウェイアドレス",
+      "devicesUrlHelp": "このコンピューターのネットワークで見つかったアドレスです。社外からは会社の VPN、または IT 部門が公開した HTTPS アドレスが必要です。",
+      "devicesStep1": "App Store または Google Play から Plexa DB をインストールします。",
+      "devicesStep2": "サインイン画面で「ゲートウェイの QR を読み取る」をタップし、コードにカメラを向けます。",
+      "devicesStep3": "このゲートウェイのユーザーでサインインします。",
+      "scanGatewayQr": "ゲートウェイの QR を読み取る",
+      "scanInstructions": "管理 → デバイス の QR コードにカメラを向けてください",
+      "qrNotGateway": "この QR コードには Plexa DB ゲートウェイのアドレスが含まれていません。"
     }
   }
 };

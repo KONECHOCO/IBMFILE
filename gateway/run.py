@@ -1,12 +1,16 @@
 """Start the Plexa DB Gateway:  python run.py  (host/port via PLEXA_HOST / PLEXA_PORT)."""
 import os
+import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import uvicorn
+
+from plexa_gateway import config
 
 if __name__ == "__main__":
     uvicorn.run(
         "plexa_gateway.main:app",
-        host=os.environ.get("PLEXA_HOST", "127.0.0.1"),
-        port=int(os.environ.get("PLEXA_PORT", "8787")),
+        host=config.HOST,
+        port=config.PORT,
         app_dir=os.path.dirname(os.path.abspath(__file__)),
     )

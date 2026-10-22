@@ -51,7 +51,14 @@ or the web build served by the gateway.
 ## Builds
 
 - **Web**: `npm run build`, then the gateway serves `dist/` at `/` (or use the Docker image in `gateway/Dockerfile`).
-- **Mobile**: `npm run build && npx cap sync`, then Xcode / Android Studio. In the app, enter the HTTPS address of the gateway.
+- **Mobile (iOS / Android, Capacitor 8)**: `npm run build`, then
+  `npx -y node@22 node_modules/@capacitor/cli/bin/capacitor sync` (the Capacitor CLI needs Node 22).
+  Android debug build: `cd android && gradlew assembleDebug`. iOS builds run on Codemagic (no Mac needed).
+  - The app starts on the public demo gateway; users enter or **scan** (QR) their company gateway address.
+    Admins show the QR in **Administration → Devices**.
+  - Company gateways on the LAN/VPN may use plain `http://`: iOS allows it for local-network addresses only
+    (`NSAllowsLocalNetworking`), Android via `network_security_config.xml` + `allowMixedContent`.
+  - For phones to reach a gateway, start it with `PLEXA_HOST=0.0.0.0` (and allow port 8787 in the firewall).
 
 ## Trademarks
 

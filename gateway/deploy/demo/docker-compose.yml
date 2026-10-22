@@ -11,6 +11,7 @@ services:
     environment:
       PLEXA_PUBLIC_DEMO: "1"
       PLEXA_TRUST_PROXY: "1"
+      PLEXA_PUBLIC_URL: "https://plexa.ikonetsolutions.com"
       PLEXA_MAX_ROWS: "1000"
       PLEXA_QUERY_TIMEOUT: "10"
       PLEXA_QUERIES_PER_MINUTE: "30"

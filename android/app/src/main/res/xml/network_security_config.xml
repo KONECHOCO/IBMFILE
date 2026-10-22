@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Company gateways on the office network/VPN often use plain http (e.g. http://192.168.1.20:8787).
+     Android cannot limit cleartext to private IP ranges, so it is allowed in general;
+     the app itself only talks to the gateway address the user enters or scans. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
