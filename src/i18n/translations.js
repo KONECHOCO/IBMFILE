@@ -20,8 +20,6 @@ export const translations = {
       "uMetadocsDesc": "Schemi, tabelle e colonne",
       "activityLog": "Audit",
       "activityLogDesc": "Registro verificabile delle attività",
-      "mobileHub": "App mobile",
-      "mobileHubDesc": "iOS, Android e PWA",
       "admin": "Amministrazione",
       "adminDesc": "Utenti, licenza e assistenza"
     },
@@ -159,20 +157,6 @@ export const translations = {
       "connectionBlocked": "Connessione Bloccata",
       "policyChanged": "Regola Modificata"
     },
-    "mobileHub": {
-      "title": "App mobile: iOS, Android e Web",
-      "subtitle": "Applicazione universale distribuibile in tutti i paesi del mondo su App Store, Google Play e Web PWA",
-      "simulatorTitle": "Simulatore Dispositivo Mobile Live",
-      "switchDevice": "Seleziona Dispositivo:",
-      "deviceIphone": "Apple iPhone 16 Pro (iOS)",
-      "deviceAndroid": "Samsung Galaxy S24 (Android)",
-      "deviceDesktop": "Visualizzazione Desktop",
-      "qrTitle": "Scansiona per testare sul tuo Smartphone",
-      "qrDesc": "Apri la fotocamera del tuo cellulare sulla stessa rete per installare come Web App nativa.",
-      "pwaReady": "Progressive Web App (PWA) Pronta per il download offline",
-      "capacitorReady": "Compatibilità Capacitor / Cordova per pacchetti .apk e .ipa",
-      "globalDeployment": "Architettura pronta per la localizzazione globale e la conformità multi-paese"
-    },
     "dbSettings": {
       "title": "Connessioni",
       "subtitle": "Configura i database a cui il gateway si collega",
@@ -210,8 +194,6 @@ export const translations = {
       "manageConnections": "Gestisci connessioni",
       "noActiveConnection": "Nessuna connessione attiva",
       "modules": "Moduli",
-      "mobilePreview": "Anteprima mobile",
-      "exitSimulator": "Esci dall'anteprima",
       "saved": "Connessione salvata.",
       "confirmDelete": "Eliminare la connessione \"{name}\"?",
       "searchConnections": "Cerca connessioni…",
@@ -384,8 +366,6 @@ export const translations = {
       "uMetadocsDesc": "Schemas, tables and columns",
       "activityLog": "Audit",
       "activityLogDesc": "Verifiable activity log",
-      "mobileHub": "Mobile app",
-      "mobileHubDesc": "iOS, Android and PWA",
       "admin": "Administration",
       "adminDesc": "Users, license and support"
     },
@@ -523,20 +503,6 @@ export const translations = {
       "connectionBlocked": "Connection Blocked",
       "policyChanged": "Policy Changed"
     },
-    "mobileHub": {
-      "title": "Mobile app: iOS, Android and Web",
-      "subtitle": "Unified enterprise software deployable worldwide across App Store, Google Play, and PWA Web",
-      "simulatorTitle": "Live Mobile Device Simulator",
-      "switchDevice": "Select Device View:",
-      "deviceIphone": "Apple iPhone 16 Pro (iOS)",
-      "deviceAndroid": "Samsung Galaxy S24 (Android)",
-      "deviceDesktop": "Desktop Browser View",
-      "qrTitle": "Scan to Test on Physical Mobile Device",
-      "qrDesc": "Point your smartphone camera to launch the responsive mobile web app on your local network.",
-      "pwaReady": "Progressive Web App (PWA) manifest ready for offline installation",
-      "capacitorReady": "Capacitor / Cordova configuration ready for .apk and .ipa builds",
-      "globalDeployment": "Ready for global multi-region deployment and worldwide compliance"
-    },
     "dbSettings": {
       "title": "Connections",
       "subtitle": "Set up the databases the gateway connects to",
@@ -574,8 +540,6 @@ export const translations = {
       "manageConnections": "Manage connections",
       "noActiveConnection": "No active connection",
       "modules": "Modules",
-      "mobilePreview": "Mobile preview",
-      "exitSimulator": "Exit preview",
       "saved": "Connection saved.",
       "confirmDelete": "Delete the connection \"{name}\"?",
       "searchConnections": "Search connections…",
@@ -748,8 +712,6 @@ export const translations = {
       "uMetadocsDesc": "Esquemas, tablas y columnas",
       "activityLog": "Auditoría",
       "activityLogDesc": "Registro de actividad verificable",
-      "mobileHub": "App móvil",
-      "mobileHubDesc": "iOS, Android y PWA",
       "admin": "Administración",
       "adminDesc": "Usuarios, licencia y soporte"
     },
@@ -887,20 +849,6 @@ export const translations = {
       "connectionBlocked": "Conexión Bloqueada",
       "policyChanged": "Regla Modificada"
     },
-    "mobileHub": {
-      "title": "App móvil: iOS, Android y Web",
-      "subtitle": "Software empresarial para desplegar en todo el mundo en App Store, Google Play y PWA",
-      "simulatorTitle": "Simulador de Dispositivo Móvil en Vivo",
-      "switchDevice": "Seleccionar Dispositivo:",
-      "deviceIphone": "Apple iPhone 16 Pro (iOS)",
-      "deviceAndroid": "Samsung Galaxy S24 (Android)",
-      "deviceDesktop": "Vista de Navegador Desktop",
-      "qrTitle": "Escanear para probar en Smartphone",
-      "qrDesc": "Abre la cámara de tu teléfono en la misma red local para probar la aplicación móvil.",
-      "pwaReady": "PWA lista para instalación sin conexión",
-      "capacitorReady": "Listo para compilar en paquetes nativos .apk y .ipa",
-      "globalDeployment": "Listo para despliegue global multi-región"
-    },
     "dbSettings": {
       "title": "Conexiones",
       "subtitle": "Configura las bases de datos a las que se conecta el gateway",
@@ -938,8 +886,6 @@ export const translations = {
       "manageConnections": "Gestionar conexiones",
       "noActiveConnection": "Ninguna conexión activa",
       "modules": "Módulos",
-      "mobilePreview": "Vista móvil",
-      "exitSimulator": "Salir de la vista previa",
       "saved": "Conexión guardada.",
       "confirmDelete": "¿Eliminar la conexión \"{name}\"?",
       "searchConnections": "Buscar conexiones…",
@@ -1112,8 +1058,6 @@ export const translations = {
       "uMetadocsDesc": "Schémas, tables et colonnes",
       "activityLog": "Audit",
       "activityLogDesc": "Journal d'activité vérifiable",
-      "mobileHub": "App mobile",
-      "mobileHubDesc": "iOS, Android et PWA",
       "admin": "Administration",
       "adminDesc": "Utilisateurs, licence et support"
     },
@@ -1251,20 +1195,6 @@ export const translations = {
       "connectionBlocked": "Connexion Bloquée",
       "policyChanged": "Règle Modifiée"
     },
-    "mobileHub": {
-      "title": "App mobile : iOS, Android et Web",
-      "subtitle": "Déploiement mondial sur App Store, Google Play et Web PWA",
-      "simulatorTitle": "Simulateur Mobile en Direct",
-      "switchDevice": "Sélectionner Dispositif :",
-      "deviceIphone": "Apple iPhone 16 Pro (iOS)",
-      "deviceAndroid": "Samsung Galaxy S24 (Android)",
-      "deviceDesktop": "Vue Navigateur Bureau",
-      "qrTitle": "Scannez pour tester sur Mobile",
-      "qrDesc": "Ouvrez l'appareil photo de votre smartphone sur le même réseau.",
-      "pwaReady": "PWA prête pour installation hors-ligne",
-      "capacitorReady": "Compatible Capacitor pour builds .apk et .ipa",
-      "globalDeployment": "Prêt pour déploiement mondial"
-    },
     "dbSettings": {
       "title": "Connexions",
       "subtitle": "Configurez les bases de données auxquelles la passerelle se connecte",
@@ -1302,8 +1232,6 @@ export const translations = {
       "manageConnections": "Gérer les connexions",
       "noActiveConnection": "Aucune connexion active",
       "modules": "Modules",
-      "mobilePreview": "Aperçu mobile",
-      "exitSimulator": "Quitter l'aperçu",
       "saved": "Connexion enregistrée.",
       "confirmDelete": "Supprimer la connexion « {name} » ?",
       "searchConnections": "Rechercher des connexions…",
@@ -1476,8 +1404,6 @@ export const translations = {
       "uMetadocsDesc": "Schemata, Tabellen und Spalten",
       "activityLog": "Audit",
       "activityLogDesc": "Überprüfbares Aktivitätsprotokoll",
-      "mobileHub": "Mobile App",
-      "mobileHubDesc": "iOS, Android und PWA",
       "admin": "Verwaltung",
       "adminDesc": "Benutzer, Lizenz und Support"
     },
@@ -1615,20 +1541,6 @@ export const translations = {
       "connectionBlocked": "Verbindung Blockiert",
       "policyChanged": "Regel Geändert"
     },
-    "mobileHub": {
-      "title": "Mobile App: iOS, Android und Web",
-      "subtitle": "Weltweit bereitstellbar über App Store, Google Play und Web PWA",
-      "simulatorTitle": "Live Mobilgeräte-Simulator",
-      "switchDevice": "Gerät Wählen:",
-      "deviceIphone": "Apple iPhone 16 Pro (iOS)",
-      "deviceAndroid": "Samsung Galaxy S24 (Android)",
-      "deviceDesktop": "Desktop-Browseransicht",
-      "qrTitle": "Scannen für Test auf Smartphone",
-      "qrDesc": "Öffnen Sie die Smartphone-Kamera im selben Netzwerk.",
-      "pwaReady": "PWA bereit für Offline-Installation",
-      "capacitorReady": "Bereit für Capacitor .apk und .ipa Builds",
-      "globalDeployment": "Bereit für globale Multi-Region-Bereitstellung"
-    },
     "dbSettings": {
       "title": "Verbindungen",
       "subtitle": "Richten Sie die Datenbanken ein, mit denen sich das Gateway verbindet",
@@ -1666,8 +1578,6 @@ export const translations = {
       "manageConnections": "Verbindungen verwalten",
       "noActiveConnection": "Keine aktive Verbindung",
       "modules": "Module",
-      "mobilePreview": "Mobile Vorschau",
-      "exitSimulator": "Vorschau beenden",
       "saved": "Verbindung gespeichert.",
       "confirmDelete": "Verbindung „{name}“ löschen?",
       "searchConnections": "Verbindungen suchen…",
@@ -1840,8 +1750,6 @@ export const translations = {
       "uMetadocsDesc": "スキーマ・テーブル・列",
       "activityLog": "監査",
       "activityLogDesc": "検証可能なアクティビティログ",
-      "mobileHub": "モバイルアプリ",
-      "mobileHubDesc": "iOS・Android・PWA",
       "admin": "管理",
       "adminDesc": "ユーザー・ライセンス・サポート"
     },
@@ -1979,20 +1887,6 @@ export const translations = {
       "connectionBlocked": "通信遮断",
       "policyChanged": "ポリシー変更"
     },
-    "mobileHub": {
-      "title": "モバイルアプリ：iOS・Android・Web",
-      "subtitle": "全世界のApp Store、Google Play、Web PWAに即座に展開可能な統合設計",
-      "simulatorTitle": "ライブ・モバイル端末シミュレーター",
-      "switchDevice": "プレビュー端末を選択:",
-      "deviceIphone": "Apple iPhone 16 Pro (iOS)",
-      "deviceAndroid": "Samsung Galaxy S24 (Android)",
-      "deviceDesktop": "デスクトップ表示",
-      "qrTitle": "実機スマホでテストするためのQRコード",
-      "qrDesc": "同一ネットワーク上のスマートフォンのカメラでスキャンし、ネイティブアプリ感覚でテストできます。",
-      "pwaReady": "PWAオフラインインストール対応",
-      "capacitorReady": "Capacitorによる.apk / .ipaビルド設定済み",
-      "globalDeployment": "グローバルマルチリージョン展開対応"
-    },
     "dbSettings": {
       "title": "接続",
       "subtitle": "ゲートウェイが接続するデータベースを設定します",
@@ -2030,8 +1924,6 @@ export const translations = {
       "manageConnections": "接続を管理",
       "noActiveConnection": "有効な接続がありません",
       "modules": "モジュール",
-      "mobilePreview": "モバイルプレビュー",
-      "exitSimulator": "プレビューを終了",
       "saved": "接続を保存しました。",
       "confirmDelete": "接続「{name}」を削除しますか？",
       "searchConnections": "接続を検索…",
