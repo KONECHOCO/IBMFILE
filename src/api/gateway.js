@@ -1,3 +1,5 @@
+import { BRAND } from "../config/brand";
+
 /**
  * Client for the Plexa DB Gateway (see /gateway). All data shown in the app
  * comes from here — there is no client-side sample data.
@@ -5,9 +7,10 @@
 
 const STORAGE_KEY = "plexa.session";
 
-// The web build served by the gateway talks to its own origin; the mobile app
-// and `npm run dev` (proxied by Vite) can point anywhere.
-const defaultBaseUrl = () => "";
+// The web build served by the gateway talks to its own origin (and `npm run dev`
+// proxies /api). The native app has no gateway of its own: it starts on the public demo.
+const isNative = () => !!window.Capacitor?.isNativePlatform?.();
+export const defaultBaseUrl = () => (isNative() ? BRAND.demoGatewayUrl : "");
 
 function readSession() {
   try {
@@ -18,6 +21,7 @@ function readSession() {
 }
 
 let session = readSession();
+if (session.baseUrl === undefined) session.baseUrl = defaultBaseUrl();
 
 function persist() {
   try {

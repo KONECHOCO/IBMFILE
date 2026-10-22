@@ -1,0 +1,26 @@
+# Public demo gateway: https://plexa.ikonetsolutions.com
+# On the shared VPS (choco@23.88.32.156) in ~/apps/plexa-demo, host port 8097
+# (8090-8096 are taken by other apps). The host nginx terminates HTTPS.
+services:
+  plexa-demo:
+    build:
+      context: .
+      dockerfile: gateway/Dockerfile
+    container_name: plexa-demo
+    restart: unless-stopped
+    environment:
+      PLEXA_PUBLIC_DEMO: "1"
+      PLEXA_TRUST_PROXY: "1"
+      PLEXA_MAX_ROWS: "1000"
+      PLEXA_QUERY_TIMEOUT: "10"
+      PLEXA_QUERIES_PER_MINUTE: "30"
+      PLEXA_CORS_ORIGINS: "https://plexa.ikonetsolutions.com,capacitor://localhost,https://localhost,http://localhost,http://localhost:5173"
+    ports:
+      - "127.0.0.1:8097:8787"
+    volumes:
+      - plexa-demo-data:/data
+    mem_limit: 512m
+    cpus: 0.5
+
+volumes:
+  plexa-demo-data:

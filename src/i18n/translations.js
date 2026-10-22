@@ -312,7 +312,11 @@ export const translations = {
         "query.error": "Query in errore"
       },
       "previewNotice": "Anteprima: questa sezione è in sviluppo e mostra dati dimostrativi, non dati reali.",
-      "demoName": "Demo — database di esempio"
+      "demoName": "Demo — database di esempio",
+      "publicDemoTitle": "Demo pubblica",
+      "publicDemoText": "Database di esempio con dati inventati, in sola lettura. Accesso:",
+      "enterDemo": "Entra nella demo",
+      "tryPublicDemo": "Prova la demo pubblica"
     }
   },
   "en": {
@@ -627,7 +631,11 @@ export const translations = {
         "query.error": "Query failed"
       },
       "previewNotice": "Preview: this section is in development and shows sample data, not real data.",
-      "demoName": "Demo — sample database"
+      "demoName": "Demo — sample database",
+      "publicDemoTitle": "Public demo",
+      "publicDemoText": "Sample database with made-up data, read-only. Sign-in:",
+      "enterDemo": "Enter the demo",
+      "tryPublicDemo": "Try the public demo"
     }
   },
   "es": {
@@ -942,7 +950,11 @@ export const translations = {
         "query.error": "Consulta con error"
       },
       "previewNotice": "Vista previa: esta sección está en desarrollo y muestra datos de ejemplo, no datos reales.",
-      "demoName": "Demo — base de datos de ejemplo"
+      "demoName": "Demo — base de datos de ejemplo",
+      "publicDemoTitle": "Demo pública",
+      "publicDemoText": "Base de datos de ejemplo con datos inventados, solo lectura. Acceso:",
+      "enterDemo": "Entrar en la demo",
+      "tryPublicDemo": "Probar la demo pública"
     }
   },
   "fr": {
@@ -1257,7 +1269,11 @@ export const translations = {
         "query.error": "Requête en erreur"
       },
       "previewNotice": "Aperçu : cette section est en développement et affiche des données d'exemple, pas des données réelles.",
-      "demoName": "Démo — base d’exemple"
+      "demoName": "Démo — base d’exemple",
+      "publicDemoTitle": "Démo publique",
+      "publicDemoText": "Base d’exemple avec des données inventées, en lecture seule. Identifiants :",
+      "enterDemo": "Entrer dans la démo",
+      "tryPublicDemo": "Essayer la démo publique"
     }
   },
   "de": {
@@ -1572,7 +1588,11 @@ export const translations = {
         "query.error": "Abfrage fehlgeschlagen"
       },
       "previewNotice": "Vorschau: Dieser Bereich ist in Entwicklung und zeigt Beispieldaten, keine echten Daten.",
-      "demoName": "Demo — Beispieldatenbank"
+      "demoName": "Demo — Beispieldatenbank",
+      "publicDemoTitle": "Öffentliche Demo",
+      "publicDemoText": "Beispieldatenbank mit erfundenen Daten, schreibgeschützt. Anmeldung:",
+      "enterDemo": "Demo starten",
+      "tryPublicDemo": "Öffentliche Demo testen"
     }
   },
   "ja": {
@@ -1887,7 +1907,11 @@ export const translations = {
         "query.error": "クエリ失敗"
       },
       "previewNotice": "プレビュー：このセクションは開発中で、実データではなくサンプルデータを表示しています。",
-      "demoName": "デモ — サンプルデータベース"
+      "demoName": "デモ — サンプルデータベース",
+      "publicDemoTitle": "公開デモ",
+      "publicDemoText": "架空のデータを使った読み取り専用のサンプルデータベースです。サインイン：",
+      "enterDemo": "デモを開く",
+      "tryPublicDemo": "公開デモを試す"
     }
   }
 };

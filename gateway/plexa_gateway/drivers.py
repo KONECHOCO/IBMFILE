@@ -8,6 +8,7 @@ that one database type (see GET /api/drivers).
 import importlib
 import sqlite3
 import threading
+import time
 from pathlib import Path
 
 from . import config
@@ -351,7 +352,11 @@ class SqliteDriver(Driver):
             path = config.DATA_DIR / path
         if not path.exists():
             raise FileNotFoundError(f"SQLite file not found: {path}")
-        return sqlite3.connect(f"file:{path.as_posix()}?mode=ro", uri=True, timeout=10, check_same_thread=False)
+        conn = sqlite3.connect(f"file:{path.as_posix()}?mode=ro", uri=True, timeout=10, check_same_thread=False)
+        # SQLite has no statement timeout: abort long queries (e.g. huge cross joins) ourselves.
+        deadline = time.monotonic() + config.QUERY_TIMEOUT_S
+        conn.set_progress_handler(lambda: 1 if time.monotonic() > deadline else 0, 10_000)
+        return conn
 
     def schemas_sql(self):
         return ("SELECT 'main' AS name", ())

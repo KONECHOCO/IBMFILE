@@ -4,4 +4,6 @@ export const BRAND = {
   shortName: "Plexa",
   appId: "com.ikonet.plexadb",
   company: "Ikonet Solutions",
+  // Public demo gateway (shared read-only account, sample data only).
+  demoGatewayUrl: "https://plexa.ikonetsolutions.com",
 };

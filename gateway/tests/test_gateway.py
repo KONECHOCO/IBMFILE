@@ -144,3 +144,32 @@ def test_ibmi_url_is_read_only():
     assert url.startswith("jdbc:as400://pub400.com/qiws;")
     assert "access=read only" in url and "libraries=qiws,qgpl" in url
     assert re.search(r"pub400\.com:\d", url) is None
+
+
+def test_public_demo_mode(monkeypatch):
+    from plexa_gateway import config
+    monkeypatch.setattr(config, "PUBLIC_DEMO", True)
+    monkeypatch.setattr(config, "QUERIES_PER_MINUTE", 3)
+    main._QUERY_TIMES.clear()
+    with TestClient(main.app) as c:
+        h = c.get("/api/health").json()
+        assert h["publicDemo"] is True and h["setupRequired"] is False
+        creds = h["demoCredentials"]
+        tok = c.post("/api/auth/login", json=creds).json()["token"]
+        auth = {"Authorization": f"Bearer {tok}"}
+        assert c.get("/api/auth/me", headers=auth).json()["role"] == "analyst"
+        # the demo account cannot add connections (no way to reach other hosts)
+        assert c.post("/api/connections", headers=auth, json={"name": "x", "driver": "sqlite"}).status_code == 403
+        assert c.post("/api/connections/test", headers=auth, json={"name": "x", "driver": "postgres", "host": "10.0.0.1"}).status_code == 403
+        demo_id = next(x["id"] for x in c.get("/api/connections", headers=auth).json() if x["isDemo"])
+        codes = [c.post(f"/api/connections/{demo_id}/query", headers=auth, json={"sql": "SELECT 1"}).status_code for _ in range(4)]
+        assert codes == [200, 200, 200, 429]
+    main._QUERY_TIMES.clear()
+
+
+def test_sqlite_long_query_is_interrupted(monkeypatch):
+    from plexa_gateway import config, runner
+    monkeypatch.setattr(config, "QUERY_TIMEOUT_S", 1)
+    demo_conn = next(c for c in store.list_connections() if c["is_demo"])
+    with pytest.raises(Exception, match="interrupt"):
+        runner.run_query(demo_conn, "SELECT COUNT(*) FROM ORDER_LINES a, ORDER_LINES b, ORDER_LINES c")

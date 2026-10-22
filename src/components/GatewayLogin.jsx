@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Server, LogIn, ShieldCheck, AlertCircle, Globe } from "lucide-react";
+import { Server, LogIn, ShieldCheck, AlertCircle, Globe, PlayCircle } from "lucide-react";
 import { api, getSession, setAuth, setGatewayUrl } from "../api/gateway";
 import { BRAND } from "../config/brand";
 import BrandMark from "./BrandMark";
@@ -42,14 +42,11 @@ export default function GatewayLogin({ lang, setLang, translations, onLoggedIn }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const submit = async (e) => {
-    e.preventDefault();
+  const signIn = async (action) => {
     setBusy(true);
     setError(null);
     try {
-      const res = health?.setupRequired
-        ? await api.setup(username, password, setupCode)
-        : await api.login(username, password);
+      const res = await action();
       setAuth(res.token, res.user);
       onLoggedIn(res.user);
     } catch (err) {
@@ -57,6 +54,18 @@ export default function GatewayLogin({ lang, setLang, translations, onLoggedIn }
     } finally {
       setBusy(false);
     }
+  };
+
+  const submit = (e) => {
+    e.preventDefault();
+    signIn(() => (health?.setupRequired ? api.setup(username, password, setupCode) : api.login(username, password)));
+  };
+
+  const enterDemo = () => signIn(() => api.login(health.demoCredentials.username, health.demoCredentials.password));
+
+  const tryPublicDemo = () => {
+    setBaseUrl(BRAND.demoGatewayUrl);
+    checkGateway(BRAND.demoGatewayUrl);
   };
 
   const label = { display: "block", fontSize: "12px", fontWeight: 600, marginBottom: "4px" };
@@ -107,6 +116,20 @@ export default function GatewayLogin({ lang, setLang, translations, onLoggedIn }
           ) : checking ? u.testing : u.gatewayHelp}
         </div>
 
+        {health?.publicDemo && health.demoCredentials && (
+          <div className="card-panel" style={{ padding: "12px", fontSize: "12px", background: "rgba(36, 161, 72, 0.08)", borderColor: "rgba(36, 161, 72, 0.35)" }}>
+            <div style={{ fontWeight: 600, marginBottom: "4px" }}>{u.publicDemoTitle}</div>
+            <div style={{ color: "var(--cds-text-secondary)", marginBottom: "10px" }}>
+              {u.publicDemoText}{" "}
+              <span className="mono">{health.demoCredentials.username} / {health.demoCredentials.password}</span>
+            </div>
+            <button type="button" className="ibm-btn ibm-btn-primary" style={{ width: "100%", justifyContent: "center" }} onClick={enterDemo} disabled={busy}>
+              <PlayCircle size={15} />
+              {u.enterDemo}
+            </button>
+          </div>
+        )}
+
         {health && (
           <form onSubmit={submit}>
             {health.setupRequired && (
@@ -133,6 +156,14 @@ export default function GatewayLogin({ lang, setLang, translations, onLoggedIn }
               {health.setupRequired ? u.createAdmin : u.signIn}
             </button>
           </form>
+        )}
+
+        {!health?.publicDemo && baseUrl.replace(/\/+$/, "") !== BRAND.demoGatewayUrl && (
+          <button type="button" className="ibm-btn ibm-btn-secondary ibm-btn-sm" style={{ width: "100%", justifyContent: "center", marginTop: "12px" }}
+            onClick={tryPublicDemo} disabled={checking}>
+            <PlayCircle size={14} />
+            {u.tryPublicDemo}
+          </button>
         )}
 
         {error && (

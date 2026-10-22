@@ -95,3 +95,13 @@ def ensure(store) -> None:
             "database": DEMO_FILE,
             "is_demo": True,
         })
+
+
+def ensure_demo_user(store, password_hash: str) -> None:
+    """Shared public-demo account: read-only analyst, password reset at every start."""
+    from . import config
+    existing = store.get_user_by_name(config.DEMO_USER)
+    if existing:
+        store.set_password(existing["id"], password_hash)
+    else:
+        store.create_user(config.DEMO_USER, password_hash, "analyst")

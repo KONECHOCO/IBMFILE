@@ -4,14 +4,32 @@
     {
       "name": "gateway",
       "runtimeExecutable": "gateway/.venv/Scripts/python.exe",
-      "runtimeArgs": ["gateway/run.py"],
+      "runtimeArgs": [
+        "gateway/run.py"
+      ],
       "port": 8787
     },
     {
       "name": "web",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
       "port": 5173
+    },
+    {
+      "name": "gateway-public-demo",
+      "runtimeExecutable": "gateway/.venv/Scripts/python.exe",
+      "runtimeArgs": [
+        "gateway/run.py"
+      ],
+      "port": 8788,
+      "env": {
+        "PLEXA_PORT": "8788",
+        "PLEXA_PUBLIC_DEMO": "1",
+        "PLEXA_DATA_DIR": "C:/Users/rebic/AppData/Local/Temp/claude/C--Users-rebic-Desktop-master-IBMFILE/3a1e4d61-d920-4314-b5f8-60e6276a6cfe/scratchpad/demo-data"
+      }
     }
   ]
 }

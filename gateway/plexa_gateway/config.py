@@ -31,6 +31,16 @@ TOKEN_HOURS = int(os.environ.get("PLEXA_TOKEN_HOURS", "12"))
 # Seeds a local SQLite demo connection with sample data (clearly labelled as demo).
 DEMO_MODE = os.environ.get("PLEXA_DEMO", "1") not in ("0", "false", "no")
 
+# Public demo (store reviewers, beta testers): a shared read-only "analyst" account
+# whose credentials the sign-in screen shows. Nobody can add connections.
+PUBLIC_DEMO = os.environ.get("PLEXA_PUBLIC_DEMO", "0") in ("1", "true", "yes")
+DEMO_USER = os.environ.get("PLEXA_DEMO_USER", "demo")
+DEMO_PASSWORD = os.environ.get("PLEXA_DEMO_PASSWORD", "plexa-demo")
+QUERIES_PER_MINUTE = int(os.environ.get("PLEXA_QUERIES_PER_MINUTE", "30" if PUBLIC_DEMO else "0"))
+
+# Set to 1 only behind a reverse proxy that overwrites X-Real-IP (e.g. nginx).
+TRUST_PROXY = os.environ.get("PLEXA_TRUST_PROXY", "0") in ("1", "true", "yes")
+
 BOOTSTRAP_ADMIN_USER = os.environ.get("PLEXA_ADMIN_USER")
 BOOTSTRAP_ADMIN_PASSWORD = os.environ.get("PLEXA_ADMIN_PASSWORD")
 

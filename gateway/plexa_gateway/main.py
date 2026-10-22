@@ -33,6 +33,21 @@ def _throttle(ip: str):
         raise HTTPException(429, "Too many failed attempts. Try again in a few minutes.")
 
 
+# Queries per client IP in the last minute (only when PLEXA_QUERIES_PER_MINUTE > 0).
+_QUERY_TIMES: dict = {}
+
+
+def _rate_limit_queries(ip: str):
+    if config.QUERIES_PER_MINUTE <= 0:
+        return
+    now = time.time()
+    recent = [t for t in _QUERY_TIMES.get(ip, []) if now - t < 60]
+    if len(recent) >= config.QUERIES_PER_MINUTE:
+        raise HTTPException(429, "Too many queries. Wait a minute and try again.")
+    recent.append(now)
+    _QUERY_TIMES[ip] = recent
+
+
 def _fail(ip: str):
     count, since = _FAILURES.get(ip, (0, 0.0))
     if time.time() - since >= _WINDOW_S:
@@ -45,6 +60,8 @@ async def lifespan(_app):
     store.init()
     if config.BOOTSTRAP_ADMIN_USER and config.BOOTSTRAP_ADMIN_PASSWORD and store.count_users() == 0:
         store.create_user(config.BOOTSTRAP_ADMIN_USER, hash_password(config.BOOTSTRAP_ADMIN_PASSWORD), "admin")
+    if config.PUBLIC_DEMO:
+        demo.ensure_demo_user(store, hash_password(config.DEMO_PASSWORD))
     if store.count_users() == 0:
         SETUP_CODE["value"] = f"{secrets.randbelow(10**6):06d}"
         print(f"\n  Plexa DB Gateway - first start.\n  Setup code: {SETUP_CODE['value']}\n", flush=True)
@@ -100,8 +117,11 @@ class SetupIn(Credentials):
 
 @app.get("/api/health")
 def health():
-    return {"status": "ok", "product": "Plexa DB Gateway", "version": __version__,
-            "setupRequired": store.count_users() == 0, "maxRows": config.MAX_ROWS}
+    info = {"status": "ok", "product": "Plexa DB Gateway", "version": __version__,
+            "setupRequired": store.count_users() == 0, "maxRows": config.MAX_ROWS, "publicDemo": config.PUBLIC_DEMO}
+    if config.PUBLIC_DEMO:
+        info["demoCredentials"] = {"username": config.DEMO_USER, "password": config.DEMO_PASSWORD}
+    return info
 
 
 @app.post("/api/auth/setup")
@@ -299,6 +319,7 @@ class QueryIn(BaseModel):
 @app.post("/api/connections/{conn_id}/query")
 def query(conn_id: str, body: QueryIn, request: Request, user: dict = Depends(current_user)):
     c = _conn_or_404(conn_id)
+    _rate_limit_queries(_ip(request))
     try:
         sqlguard.check(body.sql)
     except sqlguard.SqlRejected as e:
@@ -342,8 +363,10 @@ def columns(conn_id: str, schema: str, table: str, _: dict = Depends(current_use
 
 
 def _ip(request: Request) -> str:
-    fwd = request.headers.get("x-forwarded-for")
-    return fwd.split(",")[0].strip() if fwd else (request.client.host if request.client else "")
+    # Client-supplied forwarding headers are only trusted behind our own proxy.
+    if config.TRUST_PROXY and request.headers.get("x-real-ip"):
+        return request.headers["x-real-ip"].strip()
+    return request.client.host if request.client else ""
 
 
 def _audit(request: Request, user: dict, action: str, conn: dict = None, **kw):

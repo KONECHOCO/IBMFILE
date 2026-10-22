@@ -112,6 +112,11 @@ def list_users() -> list:
     return [dict(r) for r in rows]
 
 
+def set_password(user_id: str, password_hash: str) -> None:
+    with connect() as db:
+        db.execute("UPDATE users SET password_hash = ? WHERE id = ?", (password_hash, user_id))
+
+
 def delete_user(user_id: str) -> None:
     with connect() as db:
         db.execute("DELETE FROM users WHERE id = ?", (user_id,))
