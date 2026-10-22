@@ -13,7 +13,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from . import __version__, config, demo, drivers, runner, sqlguard, store
+from . import __version__, config, demo, drivers, licensing, runner, sqlguard, store
 from .security import encrypt, hash_password, make_token, read_token, verify_password
 
 ROLES = ("admin", "analyst", "viewer")
@@ -168,6 +168,7 @@ def add_user(body: NewUser, request: Request, admin: dict = Depends(admin_user))
         raise HTTPException(400, f"Invalid role. Allowed: {', '.join(ROLES)}")
     if store.get_user_by_name(body.username):
         raise HTTPException(409, "Username already taken.")
+    _within_license("users", store.count_users())
     user = store.create_user(body.username, hash_password(body.password), body.role)
     _audit(request, admin, "user.create", statement=f"{body.username} ({body.role})", status="OK")
     return _public_user(user)
@@ -183,6 +184,37 @@ def remove_user(user_id: str, request: Request, admin: dict = Depends(admin_user
     store.delete_user(user_id)
     _audit(request, admin, "user.delete", statement=target["username"], status="OK")
     return {"ok": True}
+
+
+class UserUpdate(BaseModel):
+    role: Optional[str] = None
+    password: Optional[str] = Field(default=None, min_length=8, max_length=256)
+
+
+@app.put("/api/users/{user_id}")
+def update_user(user_id: str, body: UserUpdate, request: Request, admin: dict = Depends(admin_user)):
+    """Change role and/or reset the password (support: user locked out)."""
+    target = store.get_user(user_id)
+    if not target:
+        raise HTTPException(404, "User not found.")
+    if body.role is not None:
+        if body.role not in ROLES:
+            raise HTTPException(400, f"Invalid role. Allowed: {', '.join(ROLES)}")
+        if target["role"] == "admin" and body.role != "admin" and store.count_admins() <= 1:
+            raise HTTPException(400, "At least one administrator must remain.")
+        store.set_role(user_id, body.role)
+        _audit(request, admin, "user.role", statement=f"{target['username']} -> {body.role}", status="OK")
+    if body.password:
+        store.set_password(user_id, hash_password(body.password))
+        _audit(request, admin, "user.password", statement=target["username"], status="OK")
+    return _public_user(store.get_user(user_id))
+
+
+def _within_license(kind: str, current: int):
+    try:
+        licensing.ensure_can_add(kind, current)
+    except licensing.LicenseError as e:
+        raise HTTPException(402, str(e))
 
 
 # ── Drivers & connections ───────────────────────────────────────────────────
@@ -245,6 +277,7 @@ def list_connections(_: dict = Depends(current_user)):
 
 @app.post("/api/connections")
 def create_connection(body: ConnectionIn, request: Request, admin: dict = Depends(admin_user)):
+    _within_license("connections", store.count_connections())
     c = store.save_connection(_validated(body), created_by=admin["id"])
     _audit(request, admin, "conn.create", conn=c, status="OK")
     return _public_conn(c)
@@ -386,6 +419,54 @@ def audit(limit: int = 500, user: dict = Depends(current_user)):
 @app.get("/api/audit/verify")
 def audit_verify(_: dict = Depends(admin_user)):
     return store.verify_audit()
+
+
+# ── Administration (license, system info for support) ──────────────────────
+
+
+class LicenseIn(BaseModel):
+    key: str = Field(min_length=10, max_length=4000)
+
+
+@app.get("/api/admin/system")
+def system_info(_: dict = Depends(admin_user)):
+    java_ok, java_problem = drivers.get("ibmi").available()
+    return {
+        "product": "Plexa DB Gateway",
+        "version": __version__,
+        "gatewayId": config.GATEWAY_ID,
+        "license": licensing.status(),
+        "users": store.count_users(),
+        "connections": store.count_connections(),
+        "drivers": [{"key": d.key, "label": d.label, "available": d.available()[0]} for d in drivers.DRIVERS.values()],
+        "ibmiReady": java_ok,
+        "ibmiProblem": java_problem,
+        "audit": store.verify_audit(),
+        "publicDemo": config.PUBLIC_DEMO,
+    }
+
+
+@app.get("/api/admin/license")
+def license_status(_: dict = Depends(admin_user)):
+    return licensing.status()
+
+
+@app.post("/api/admin/license")
+def license_activate(body: LicenseIn, request: Request, admin: dict = Depends(admin_user)):
+    try:
+        st = licensing.activate(body.key)
+    except licensing.LicenseError as e:
+        _audit(request, admin, "license.rejected", statement=str(e), status="ERROR")
+        raise HTTPException(400, str(e))
+    _audit(request, admin, "license.activate", statement=f"{st['licenseId']} {st['plan']} {st['customer']} -> {st['expires']}", status="OK")
+    return st
+
+
+@app.delete("/api/admin/license")
+def license_remove(request: Request, admin: dict = Depends(admin_user)):
+    licensing.remove()
+    _audit(request, admin, "license.remove", status="OK")
+    return licensing.status()
 
 
 # ── Web client (built with `npm run build`) ─────────────────────────────────

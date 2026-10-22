@@ -6,12 +6,11 @@ import XLock from "./components/XLock";
 import USchedule from "./components/USchedule";
 import UMetadocs from "./components/UMetadocs";
 import ActivityLog from "./components/ActivityLog";
-import MobileDistributionHub from "./components/MobileDistributionHub";
+import AdminPanel from "./components/AdminPanel";
 import DatabaseSettings from "./components/DatabaseSettings";
 import GatewayLogin from "./components/GatewayLogin";
 import { translations } from "./i18n/translations";
 import { api, getSession, logout, setUnauthorizedHandler } from "./api/gateway";
-import { Wifi, Battery, Signal, Monitor, Smartphone, Apple } from "lucide-react";
 
 const SUPPORTED_LANGS = ["it", "en", "es", "fr", "de", "ja"];
 
@@ -29,7 +28,6 @@ function initialLang() {
 export default function App() {
   const [lang, setLang] = useState(initialLang);
   const [theme, setTheme] = useState("dark");
-  const [platformMode, setPlatformMode] = useState("desktop"); // 'desktop' | 'iphone' | 'android'
   const [currentTab, setCurrentTab] = useState("queryCentral");
   const [user, setUser] = useState(getSession().token ? getSession().user : null);
   const [connections, setConnections] = useState([]);
@@ -153,121 +151,12 @@ export default function App() {
             user={user}
           />
         );
-      case "mobileHub":
-        return (
-          <MobileDistributionHub
-            lang={lang}
-            translations={translations}
-            platformMode={platformMode}
-            setPlatformMode={setPlatformMode}
-          />
-        );
+      case "admin":
+        return user.role === "admin" ? <AdminPanel lang={lang} translations={translations} user={user} /> : null;
       default:
         return null;
     }
   };
-
-  // If in Mobile Simulator Mode (iPhone / Android)
-  if (platformMode === "iphone" || platformMode === "android") {
-    const isIphone = platformMode === "iphone";
-
-    return (
-      <div className="simulator-wrapper" style={{ minHeight: "100vh", backgroundColor: "#0a0a0a" }}>
-        {/* Simulator Control Bar */}
-        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px", zIndex: 10 }}>
-          <button 
-            className="ibm-btn ibm-btn-secondary ibm-btn-sm"
-            onClick={() => setPlatformMode("desktop")}
-          >
-            <Monitor size={14} />
-            {translations[lang].ui.exitSimulator}
-          </button>
-
-          <button 
-            className={`ibm-btn ibm-btn-sm ${isIphone ? "ibm-btn-primary" : "ibm-btn-secondary"}`}
-            onClick={() => setPlatformMode("iphone")}
-          >
-            <Apple size={14} />
-            iPhone 16 Pro
-          </button>
-
-          <button 
-            className={`ibm-btn ibm-btn-sm ${!isIphone ? "ibm-btn-primary" : "ibm-btn-secondary"}`}
-            onClick={() => setPlatformMode("android")}
-          >
-            <Smartphone size={14} />
-            Samsung Galaxy S24
-          </button>
-        </div>
-
-        {/* Device Frame */}
-        <div className={isIphone ? "device-frame-iphone" : "device-frame-android"}>
-          {/* Dynamic Island or Punch Hole */}
-          {isIphone ? (
-            <div className="dynamic-island">
-              <div className="dynamic-island-cam"></div>
-              <div style={{ width: "30px", height: "10px", background: "#050505", borderRadius: "4px" }}></div>
-              <div className="dynamic-island-sensor"></div>
-            </div>
-          ) : (
-            <div className="android-punch-hole"></div>
-          )}
-
-          {/* Status Bar */}
-          <div style={{ 
-            position: "absolute", 
-            top: isIphone ? "12px" : "6px", 
-            left: "24px", 
-            right: "24px", 
-            display: "flex", 
-            justifyContent: "space-between", 
-            alignItems: "center", 
-            fontSize: "12px", 
-            fontFamily: "var(--font-sans)",
-            fontWeight: 600,
-            color: "#ffffff",
-            zIndex: 998
-          }}>
-            <span>09:41</span>
-            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              <Signal size={12} />
-              <Wifi size={12} />
-              <Battery size={14} />
-            </div>
-          </div>
-
-          {/* Inner Screen Scrollable View */}
-          <div className="device-screen-inner">
-            <Header
-              lang={lang}
-              setLang={setLang}
-              translations={translations}
-              theme={theme}
-              setTheme={setTheme}
-              platformMode={platformMode}
-              setPlatformMode={setPlatformMode}
-              activeDb={shownActiveDb}
-              user={user}
-              onLogout={handleLogout}
-              setCurrentTab={setCurrentTab}
-            />
-
-            <main style={{ padding: "12px 12px 80px 12px", flex: 1 }}>
-              {renderCurrentView()}
-            </main>
-
-            {/* Mobile Tab Bar inside device */}
-            <MobileTabBar
-              currentTab={currentTab}
-              setCurrentTab={setCurrentTab}
-              translations={translations}
-              lang={lang}
-            />
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   // Standard Desktop Layout
   return (
@@ -278,8 +167,6 @@ export default function App() {
         translations={translations}
         theme={theme}
         setTheme={setTheme}
-        platformMode={platformMode}
-        setPlatformMode={setPlatformMode}
         activeDb={shownActiveDb}
         user={user}
         onLogout={handleLogout}
@@ -288,6 +175,7 @@ export default function App() {
 
       <div className="workspace-layout">
         <Sidebar
+          user={user}
           currentTab={currentTab}
           setCurrentTab={setCurrentTab}
           translations={translations}
@@ -302,6 +190,7 @@ export default function App() {
 
       {/* Mobile Tab Bar on narrow screens */}
       <MobileTabBar
+        user={user}
         currentTab={currentTab}
         setCurrentTab={setCurrentTab}
         translations={translations}

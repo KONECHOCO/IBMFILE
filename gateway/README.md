@@ -57,10 +57,35 @@ require HTTPS.
 | POST | `/api/connections/{id}/query` `{sql, maxRows}` | signed in |
 | GET | `/api/connections/{id}/schemas`, `/tables?schema=`, `/columns?schema=&table=` | signed in |
 | GET | `/api/audit`, `/api/audit/verify` | signed in (own entries) / admin |
-| GET/POST/DELETE | `/api/users` | admin |
+| GET/POST/PUT/DELETE | `/api/users[/{id}]` (PUT: role, password reset) | admin |
+| GET | `/api/admin/system` (version, gateway ID, license, drivers, audit) | admin |
+| GET/POST/DELETE | `/api/admin/license` | admin |
 
 The audit trail is a hash chain: each entry stores the SHA-256 of the previous
 entry plus its own content, so `/api/audit/verify` detects any edited or deleted row.
+
+## Licenses
+
+Without a license the gateway runs as **Community** (3 users, 2 connections).
+A license key (`PLEXA1.…`) is pasted in the app under **Administration → License**.
+Keys are Ed25519-signed by Ikonet and verified offline with the public key in
+`plexa_gateway/licensing.py`; they can be bound to one gateway (its ID is shown
+in the same page) and carry plan, limits and expiry. When a license expires,
+existing users and connections keep working; only adding new ones above the
+Community limits is refused. Keys are issued with `tools/license-console`.
+
+## Support commands
+
+Run on the gateway machine, from the `gateway` folder:
+
+```bash
+.venv/Scripts/python -m plexa_gateway.cli list-users
+.venv/Scripts/python -m plexa_gateway.cli reset-password USERNAME
+.venv/Scripts/python -m plexa_gateway.cli create-admin USERNAME
+.venv/Scripts/python -m plexa_gateway.cli info
+```
+
+In Docker: `docker exec -it plexa-demo python -m plexa_gateway.cli list-users`.
 
 ## Tests
 

@@ -26,7 +26,7 @@ reads the catalog and writes a tamper-evident audit trail. See [gateway/README.m
 | Data catalog — schemas/libraries, tables, views, columns | real |
 | Audit — every sign-in, test and query, SHA-256 hash chain with verification | real |
 | Port Guard, Scheduled reports | preview with sample data, labelled as such |
-| Mobile preview (device frame) | development aid |
+| Administration (admins only) — users and roles, password reset, license activation, system info for support | real |
 
 A **demo database** (SQLite with fictional sample data, always marked "DEMO")
 is created by the gateway so the app can be tried without your own database.

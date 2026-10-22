@@ -2,8 +2,6 @@ import React from "react";
 import { 
   ShieldCheck, 
   Database, 
-  Smartphone, 
-  Monitor, 
   Globe, 
   Moon, 
   Sun, 
@@ -22,8 +20,6 @@ export default function Header({
   translations,
   theme,
   setTheme,
-  platformMode,
-  setPlatformMode,
   activeDb,
   user,
   onLogout,
@@ -83,15 +79,6 @@ export default function Header({
         </span>
         <button className="btn-icon" onClick={onLogout} title={u.signOut}>
           <LogOut size={16} />
-        </button>
-
-        {/* Platform View: Desktop vs Mobile App Simulator */}
-        <button 
-          className={`btn-icon header-simulator-btn ${platformMode !== "desktop" ? "active" : ""}`}
-          onClick={() => setPlatformMode(platformMode === "desktop" ? "iphone" : "desktop")}
-          title={platformMode === "desktop" ? u.mobilePreview : u.exitSimulator}
-        >
-          {platformMode === "desktop" ? <Smartphone size={16} /> : <Monitor size={16} />}
         </button>
 
         {/* Multi-Language Selector (IT, EN, ES, FR, DE, JA) */}

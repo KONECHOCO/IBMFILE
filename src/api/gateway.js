@@ -111,6 +111,11 @@ export const api = {
   users: () => request("/api/users"),
   createUser: (u) => request("/api/users", { method: "POST", body: u }),
   deleteUser: (id) => request(`/api/users/${id}`, { method: "DELETE" }),
+  updateUser: (id, changes) => request(`/api/users/${id}`, { method: "PUT", body: changes }),
+
+  system: () => request("/api/admin/system"),
+  activateLicense: (key) => request("/api/admin/license", { method: "POST", body: { key } }),
+  removeLicense: () => request("/api/admin/license", { method: "DELETE" }),
 };
 
 /** Turns {columns, rows} from the gateway into row objects for the grid and exports. */

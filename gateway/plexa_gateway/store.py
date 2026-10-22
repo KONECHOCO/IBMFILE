@@ -37,6 +37,11 @@ CREATE TABLE IF NOT EXISTS connections (
     updated_at    TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS settings (
+    key   TEXT PRIMARY KEY,
+    value TEXT
+);
+
 CREATE TABLE IF NOT EXISTS audit (
     seq             INTEGER PRIMARY KEY AUTOINCREMENT,
     ts              TEXT NOT NULL,
@@ -112,6 +117,16 @@ def list_users() -> list:
     return [dict(r) for r in rows]
 
 
+def set_role(user_id: str, role: str) -> None:
+    with connect() as db:
+        db.execute("UPDATE users SET role = ? WHERE id = ?", (role, user_id))
+
+
+def count_admins() -> int:
+    with connect() as db:
+        return db.execute("SELECT COUNT(*) FROM users WHERE role = 'admin'").fetchone()[0]
+
+
 def set_password(user_id: str, password_hash: str) -> None:
     with connect() as db:
         db.execute("UPDATE users SET password_hash = ? WHERE id = ?", (password_hash, user_id))
@@ -170,9 +185,32 @@ def save_connection(data: dict, conn_id: str = None, created_by: str = None) -> 
     return get_connection(conn_id)
 
 
+def count_connections(include_demo: bool = False) -> int:
+    with connect() as db:
+        sql = "SELECT COUNT(*) FROM connections" + ("" if include_demo else " WHERE is_demo = 0")
+        return db.execute(sql).fetchone()[0]
+
+
 def delete_connection(conn_id: str) -> None:
     with connect() as db:
         db.execute("DELETE FROM connections WHERE id = ?", (conn_id,))
+
+
+# ── Settings ────────────────────────────────────────────────────────────────
+
+
+def get_setting(key: str):
+    with connect() as db:
+        row = db.execute("SELECT value FROM settings WHERE key = ?", (key,)).fetchone()
+    return row[0] if row else None
+
+
+def set_setting(key: str, value) -> None:
+    with connect() as db:
+        if value is None:
+            db.execute("DELETE FROM settings WHERE key = ?", (key,))
+        else:
+            db.execute("INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)", (key, value))
 
 
 # ── Audit trail (hash chain: each entry seals the previous one) ─────────────

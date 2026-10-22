@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Console licenze</title>
+<style>
+  :root { --bg:#161616; --panel:#262626; --line:#393939; --text:#f4f4f4; --muted:#a8a8a8; --blue:#0f62fe; --green:#42be65; --red:#fa4d56; --amber:#f1c21b; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:14px/1.45 "IBM Plex Sans", system-ui, sans-serif; }
+  header { padding:16px 20px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+  h1 { font-size:18px; margin:0; } h2 { font-size:15px; margin:0 0 12px; }
+  main { padding:16px 20px; display:grid; grid-template-columns: minmax(280px, 380px) 1fr; gap:16px; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+  .panel { background:var(--panel); border:1px solid var(--line); padding:16px; min-width:0; }
+  label { display:block; font-size:12px; font-weight:600; margin:10px 0 4px; }
+  input, select, textarea { width:100%; background:#161616; color:var(--text); border:1px solid var(--line); padding:8px; font:inherit; }
+  .row { display:flex; gap:8px; } .row > * { flex:1; }
+  button { background:var(--blue); color:#fff; border:0; padding:8px 12px; font:inherit; cursor:pointer; }
+  button.secondary { background:#393939; } button:disabled { opacity:.5; }
+  .hint { color:var(--muted); font-size:12px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th, td { text-align:left; padding:8px 6px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { color:var(--muted); font-size:11px; text-transform:uppercase; }
+  .mono { font-family:"IBM Plex Mono", Consolas, monospace; }
+  .badge { font-size:11px; padding:2px 6px; border:1px solid currentColor; white-space:nowrap; }
+  .active { color:var(--green); } .replaced { color:var(--muted); } .revoked, .expired { color:var(--red); } .soon { color:var(--amber); }
+  .key { word-break:break-all; font-size:11px; background:#161616; padding:8px; border:1px solid var(--line); margin:8px 0; }
+  .table-wrap { overflow-x:auto; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Plexa DB — Console licenze Ikonet</h1>
+  <span class="hint">Solo su questo PC · chiave privata in %USERPROFILE%\.plexa-licensing</span>
+</header>
+<main>
+  <section class="panel">
+    <h2>Nuova licenza</h2>
+    <form id="issue">
+      <label>Cliente (ragione sociale)</label><input name="customer" required>
+      <label>Email referente</label><input name="email" type="email">
+      <div class="row">
+        <div><label>Piano</label><select name="plan"><option value="business">Business</option><option value="enterprise">Enterprise</option><option value="trial">Prova</option></select></div>
+        <div><label>Scadenza</label><input name="expires" type="date"></div>
+      </div>
+      <div class="row">
+        <div><label>Max utenti</label><input name="maxUsers" type="number" min="1" placeholder="illimitati"></div>
+        <div><label>Max connessioni</label><input name="maxConnections" type="number" min="1" placeholder="illimitate"></div>
+      </div>
+      <label>ID gateway del cliente</label><input name="gatewayId" class="mono" placeholder="GW-XXXXXXXXXXXX oppure * (qualsiasi)">
+      <div class="hint">Il cliente lo trova in Amministrazione → Licenza. Con * la chiave funziona su qualsiasi gateway.</div>
+      <label>Note</label><textarea name="notes" rows="2"></textarea>
+      <p><button type="submit">Emetti licenza</button></p>
+    </form>
+    <div id="result"></div>
+  </section>
+
+  <section class="panel">
+    <div class="row" style="align-items:center; margin-bottom:12px">
+      <h2 style="margin:0">Licenze emesse</h2>
+      <input id="search" placeholder="Cerca cliente, email, ID licenza o gateway…">
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Licenza</th><th>Cliente</th><th>Piano / limiti</th><th>Scadenza</th><th>Gateway</th><th>Stato</th><th></th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p class="hint">"Revocata" vale solo nel registro: una chiave già consegnata continua a funzionare fino alla scadenza (le licenze si verificano offline). Per questo conviene emettere licenze annuali.</p>
+  </section>
+</main>
+<script>
+const $ = (s) => document.querySelector(s);
+let all = [];
+const esc = (v) => String(v ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+
+async function api(path, opts = {}) {
+  const res = await fetch(path, { headers: { "Content-Type": "application/json" }, ...opts });
+  const data = await res.json();
+  if (!res.ok) throw new Error(typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail));
+  return data;
+}
+
+function state(l) {
+  if (l.status !== "active") return l.status;
+  if (!l.expires) return "active";
+  const days = (new Date(l.expires) - new Date()) / 86400000;
+  return days < 0 ? "expired" : days < 30 ? "soon" : "active";
+}
+const LABEL = { active: "attiva", replaced: "sostituita", revoked: "revocata", expired: "scaduta", soon: "in scadenza" };
+
+function render() {
+  const q = $("#search").value.toLowerCase();
+  const rows = all.filter((l) => [l.lid, l.customer, l.email, l.gateway_id].some((v) => (v || "").toLowerCase().includes(q)));
+  $("#rows").innerHTML = rows.map((l) => {
+    const st = state(l);
+    return `<tr>
+      <td class="mono">${esc(l.lid)}<div class="hint">${esc(l.issued_at.slice(0, 10))}</div></td>
+      <td>${esc(l.customer)}<div class="hint">${esc(l.email)}</div>${l.notes ? `<div class="hint">${esc(l.notes)}</div>` : ""}</td>
+      <td>${esc(l.plan)}<div class="hint">${l.max_users ?? "∞"} utenti · ${l.max_connections ?? "∞"} conn.</div></td>
+      <td class="mono">${esc(l.expires || "—")}</td>
+      <td class="mono">${esc(l.gateway_id)}</td>
+      <td><span class="badge ${st}">${LABEL[st]}</span></td>
+      <td style="white-space:nowrap">
+        <button class="secondary" data-copy="${esc(l.lid)}">Copia chiave</button>
+        ${l.status === "active" ? `<button class="secondary" data-renew="${esc(l.lid)}">Rinnova</button>
+        <button class="secondary" data-revoke="${esc(l.lid)}">Revoca</button>` : ""}
+      </td></tr>`;
+  }).join("") || `<tr><td colspan="7" class="hint">Nessuna licenza.</td></tr>`;
+}
+
+async function load() { all = await api("/api/licenses"); render(); }
+
+function showKey(l) {
+  $("#result").innerHTML = `<h2>Licenza ${esc(l.lid)} emessa</h2>
+    <div class="key mono">${esc(l.license_key)}</div>
+    <button class="secondary" data-copy="${esc(l.lid)}">Copia chiave</button>
+    <p class="hint">Il cliente la incolla in Plexa DB → Amministrazione → Licenza.</p>`;
+}
+
+$("#issue").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const f = Object.fromEntries(new FormData(e.target));
+  const body = { ...f, maxUsers: f.maxUsers ? Number(f.maxUsers) : null, maxConnections: f.maxConnections ? Number(f.maxConnections) : null,
+                 expires: f.expires || null, gatewayId: f.gatewayId || "*" };
+  try { showKey(await api("/api/licenses", { method: "POST", body: JSON.stringify(body) })); e.target.reset(); load(); }
+  catch (err) { alert(err.message); }
+});
+
+document.addEventListener("click", async (e) => {
+  const t = e.target;
+  try {
+    if (t.dataset.copy) {
+      const l = all.find((x) => x.lid === t.dataset.copy) || await api(`/api/licenses/${t.dataset.copy}`);
+      await navigator.clipboard.writeText(l.license_key);
+      t.textContent = "Copiata ✓";
+    } else if (t.dataset.renew) {
+      const d = new Date(); d.setFullYear(d.getFullYear() + 1);
+      const expires = prompt("Nuova scadenza (AAAA-MM-GG):", d.toISOString().slice(0, 10));
+      if (!expires) return;
+      showKey(await api(`/api/licenses/${t.dataset.renew}/renew`, { method: "POST", body: JSON.stringify({ expires }) }));
+      load();
+    } else if (t.dataset.revoke) {
+      if (!confirm("Segnare la licenza come revocata nel registro?")) return;
+      await api(`/api/licenses/${t.dataset.revoke}`, { method: "PUT", body: JSON.stringify({ status: "revoked", notes: (all.find((x) => x.lid === t.dataset.revoke) || {}).notes || "" }) });
+      load();
+    }
+  } catch (err) { alert(err.message); }
+});
+
+$("#search").addEventListener("input", render);
+load();
+</script>
+</body>
+</html>

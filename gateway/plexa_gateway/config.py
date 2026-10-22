@@ -69,3 +69,12 @@ def _fernet_key() -> str:
 
 JWT_SECRET = _persistent_secret("PLEXA_JWT_SECRET", "jwt.secret", lambda: secrets.token_urlsafe(48))
 ENCRYPTION_KEY = _persistent_secret("PLEXA_ENCRYPTION_KEY", "vault.key", _fernet_key)
+
+
+def _gateway_id() -> str:
+    import uuid
+    return "GW-" + uuid.uuid4().hex[:12].upper()
+
+
+# Identifies this installation; licenses can be bound to it.
+GATEWAY_ID = _persistent_secret("PLEXA_GATEWAY_ID", "gateway.id", _gateway_id)

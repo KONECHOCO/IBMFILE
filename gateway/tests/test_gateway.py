@@ -173,3 +173,70 @@ def test_sqlite_long_query_is_interrupted(monkeypatch):
     demo_conn = next(c for c in store.list_connections() if c["is_demo"])
     with pytest.raises(Exception, match="interrupt"):
         runner.run_query(demo_conn, "SELECT COUNT(*) FROM ORDER_LINES a, ORDER_LINES b, ORDER_LINES c")
+
+
+# ── Licenses ────────────────────────────────────────────────────────────────
+
+def _test_signer(monkeypatch):
+    """Swap the embedded public key for a throwaway one and return a signer."""
+    import base64, json as _json
+    from cryptography.hazmat.primitives import serialization
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+    from plexa_gateway import licensing
+    key = Ed25519PrivateKey.generate()
+    pub = key.public_key().public_bytes(serialization.Encoding.Raw, serialization.PublicFormat.Raw)
+    monkeypatch.setattr(licensing, "PUBLIC_KEY", base64.b64encode(pub).decode())
+    b64 = lambda b: base64.urlsafe_b64encode(b).rstrip(b"=").decode()
+
+    def sign(payload, signer=key):
+        body = _json.dumps(payload).encode()
+        return f"PLEXA1.{b64(body)}.{b64(signer.sign(body))}"
+    return sign
+
+
+def test_license_lifecycle(client, admin, monkeypatch):
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+    from plexa_gateway import config
+    sign = _test_signer(monkeypatch)
+    st = client.get("/api/admin/license", headers=admin).json()
+    assert st["plan"] == "community" and st["gatewayId"] == config.GATEWAY_ID
+
+    forged = sign({"lid": "X", "plan": "business"}, signer=Ed25519PrivateKey.generate())
+    assert client.post("/api/admin/license", headers=admin, json={"key": forged}).status_code == 400
+    other_gw = sign({"lid": "X", "plan": "business", "gatewayId": "GW-OTHER"})
+    assert "another gateway" in client.post("/api/admin/license", headers=admin, json={"key": other_gw}).json()["detail"]
+    expired = sign({"lid": "X", "plan": "business", "gatewayId": "*", "expires": "2020-01-01"})
+    assert "expired" in client.post("/api/admin/license", headers=admin, json={"key": expired}).json()["detail"]
+
+    good = sign({"lid": "LIC-1", "customer": "ACME", "plan": "business", "maxUsers": None, "maxConnections": 10,
+                 "gatewayId": config.GATEWAY_ID, "expires": "2099-12-31"})
+    r = client.post("/api/admin/license", headers=admin, json={"key": good})
+    assert r.status_code == 200 and r.json()["customer"] == "ACME" and r.json()["maxConnections"] == 10
+    info = client.get("/api/admin/system", headers=admin).json()
+    assert info["license"]["valid"] and "valid" in info["audit"]  # chain was tampered by an earlier test
+    client.delete("/api/admin/license", headers=admin)
+    assert client.get("/api/admin/license", headers=admin).json()["plan"] == "community"
+
+
+def test_community_limits(client, admin, monkeypatch):
+    from plexa_gateway import licensing
+    monkeypatch.setattr(licensing, "COMMUNITY", {"plan": "community", "maxUsers": store.count_users(), "maxConnections": 0})
+    r = client.post("/api/users", headers=admin, json={"username": "extra1", "password": "extra-pass1", "role": "viewer"})
+    assert r.status_code == 402 and "Limit reached" in r.json()["detail"]
+    r = client.post("/api/connections", headers=admin, json={"name": "y", "driver": "sqlite", "database": "x"})
+    assert r.status_code == 402
+
+
+def test_user_update_and_last_admin(client, admin):
+    me = client.get("/api/auth/me", headers=admin).json()
+    assert client.put(f"/api/users/{me['id']}", headers=admin, json={"role": "viewer"}).status_code == 400
+    mario = next(u for u in client.get("/api/users", headers=admin).json() if u["username"] == "mario")
+    assert client.put(f"/api/users/{mario['id']}", headers=admin, json={"role": "viewer", "password": "new-pass-123"}).json()["role"] == "viewer"
+    assert client.post("/api/auth/login", json={"username": "mario", "password": "new-pass-123"}).status_code == 200
+
+
+def test_cli_reset_password(monkeypatch, capsys):
+    from plexa_gateway import cli
+    monkeypatch.setattr(cli.getpass, "getpass", lambda prompt="": "cli-pass-123")
+    assert cli.main(["reset-password", "mario"]) == 0
+    assert "Password changed" in capsys.readouterr().out

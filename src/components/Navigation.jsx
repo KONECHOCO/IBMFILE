@@ -5,7 +5,7 @@ import {
   CalendarClock, 
   Layers, 
   FileCheck2, 
-  Smartphone,
+  Settings2,
   Server,
   KeyRound
 } from "lucide-react";
@@ -17,10 +17,10 @@ export const NAV_ITEMS = [
   { id: "uSchedule", icon: CalendarClock, key: "uSchedule" },
   { id: "uMetadocs", icon: Layers, key: "uMetadocs" },
   { id: "activityLog", icon: FileCheck2, key: "activityLog" },
-  { id: "mobileHub", icon: Smartphone, key: "mobileHub" },
+  { id: "admin", icon: Settings2, key: "admin", adminOnly: true },
 ];
 
-export function Sidebar({ currentTab, setCurrentTab, translations, lang, activeDb }) {
+export function Sidebar({ user, currentTab, setCurrentTab, translations, lang, activeDb }) {
   const t = translations[lang] || translations.en;
 
   return (
@@ -30,7 +30,7 @@ export function Sidebar({ currentTab, setCurrentTab, translations, lang, activeD
           {t.ui.modules}
         </div>
         <ul className="sidebar-nav-list">
-          {NAV_ITEMS.map((item) => {
+          {NAV_ITEMS.filter((item) => !item.adminOnly || user?.role === "admin").map((item) => {
             const Icon = item.icon;
             const isActive = currentTab === item.id;
             const title = t.nav[item.key];
@@ -76,12 +76,12 @@ export function Sidebar({ currentTab, setCurrentTab, translations, lang, activeD
   );
 }
 
-export function MobileTabBar({ currentTab, setCurrentTab, translations, lang }) {
+export function MobileTabBar({ user, currentTab, setCurrentTab, translations, lang }) {
   const t = translations[lang] || translations.en;
 
   return (
     <nav className="mobile-tab-bar">
-      {NAV_ITEMS.map((item) => {
+      {NAV_ITEMS.filter((item) => !item.adminOnly || user?.role === "admin").map((item) => {
         const Icon = item.icon;
         const isActive = currentTab === item.id;
         const title = t.nav[item.key];
