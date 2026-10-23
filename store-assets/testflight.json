@@ -1,0 +1,26 @@
+{
+  "it": {
+    "description": "Plexa DB è un client SQL in sola lettura per i database aziendali: IBM i (AS400), PostgreSQL, MySQL, SQL Server, Oracle e Snowflake. In questa beta puoi provarlo sul database di esempio: nella schermata di accesso tocca «Entra nella demo». Se la tua azienda ha un gateway Plexa DB, inserisci il suo indirizzo o scansiona il QR.",
+    "whatsNew": "Prima beta di Plexa DB. Da provare: accesso alla demo, Query Studio (wizard visuale, editor SQL, query pronte, grafico, export CSV/JSON/Excel), Catalogo dati, Audit, scansione QR del gateway aziendale, schermata Pro con Ripristina acquisti. Segnala qualsiasi errore o testo poco chiaro."
+  },
+  "en-US": {
+    "description": "Plexa DB is a read-only SQL client for company databases: IBM i (AS400), PostgreSQL, MySQL, SQL Server, Oracle and Snowflake. In this beta you can try it on the sample database: on the sign-in screen tap “Enter the demo”. If your company runs a Plexa DB gateway, enter its address or scan its QR code.",
+    "whatsNew": "First Plexa DB beta. Please test: demo sign-in, Query Studio (visual wizard, SQL editor, ready-made queries, chart, CSV/JSON/Excel export), Data catalog, Audit, company gateway QR scan, Pro screen with Restore purchases. Report any error or unclear text."
+  },
+  "fr-FR": {
+    "description": "Plexa DB est un client SQL en lecture seule pour les bases de données d'entreprise : IBM i (AS400), PostgreSQL, MySQL, SQL Server, Oracle et Snowflake. Dans cette bêta, essayez-le sur la base d'exemple : sur l'écran de connexion, touchez « Entrer dans la démo ». Si votre entreprise a une passerelle Plexa DB, saisissez son adresse ou scannez son QR code.",
+    "whatsNew": "Première bêta de Plexa DB. À tester : connexion à la démo, Query Studio (assistant visuel, éditeur SQL, requêtes prêtes, graphique, export CSV/JSON/Excel), catalogue de données, audit, scan du QR de la passerelle, écran Pro avec Restaurer les achats. Signalez toute erreur ou tout texte peu clair."
+  },
+  "es-ES": {
+    "description": "Plexa DB es un cliente SQL de solo lectura para bases de datos de empresa: IBM i (AS400), PostgreSQL, MySQL, SQL Server, Oracle y Snowflake. En esta beta puedes probarlo con la base de datos de ejemplo: en la pantalla de acceso toca «Entrar en la demo». Si tu empresa tiene un gateway Plexa DB, escribe su dirección o escanea su código QR.",
+    "whatsNew": "Primera beta de Plexa DB. Para probar: acceso a la demo, Query Studio (asistente visual, editor SQL, consultas listas, gráfico, exportación CSV/JSON/Excel), catálogo de datos, auditoría, escaneo del QR del gateway, pantalla Pro con Restaurar compras. Informa de cualquier error o texto poco claro."
+  },
+  "de-DE": {
+    "description": "Plexa DB ist ein schreibgeschützter SQL-Client für Firmendatenbanken: IBM i (AS400), PostgreSQL, MySQL, SQL Server, Oracle und Snowflake. In dieser Beta können Sie ihn mit der Beispieldatenbank testen: Tippen Sie auf dem Anmeldebildschirm auf „Demo starten“. Wenn Ihr Unternehmen ein Plexa-DB-Gateway betreibt, geben Sie dessen Adresse ein oder scannen Sie den QR-Code.",
+    "whatsNew": "Erste Beta von Plexa DB. Bitte testen: Demo-Anmeldung, Query Studio (visueller Assistent, SQL-Editor, fertige Abfragen, Diagramm, Export als CSV/JSON/Excel), Datenkatalog, Audit, QR-Scan des Firmen-Gateways, Pro-Bildschirm mit Käufe wiederherstellen. Melden Sie Fehler oder unklare Texte."
+  },
+  "ja": {
+    "description": "Plexa DB は、会社のデータベース（IBM i〈AS400〉、PostgreSQL、MySQL、SQL Server、Oracle、Snowflake）向けの読み取り専用 SQL クライアントです。このベータ版ではサンプルデータベースで試せます。サインイン画面で「デモを開く」をタップしてください。会社に Plexa DB ゲートウェイがある場合は、そのアドレスを入力するか QR コードを読み取ってください。",
+    "whatsNew": "Plexa DB の最初のベータ版です。デモへのサインイン、Query Studio（ビジュアルウィザード、SQL エディタ、定型クエリ、グラフ、CSV/JSON/Excel エクスポート）、データカタログ、監査、ゲートウェイの QR 読み取り、購入の復元を含む Pro 画面をお試しください。エラーやわかりにくい文章があればお知らせください。"
+  }
+}
