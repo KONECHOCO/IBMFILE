@@ -813,13 +813,13 @@ body {
   }
   
   .main-view-container {
-    padding: 12px 12px 80px 12px;
+    padding: 12px 12px calc(80px + var(--ad-banner-height, 0px)) 12px;
   }
 
   .mobile-tab-bar {
     display: flex;
     position: fixed;
-    bottom: 0;
+    bottom: var(--ad-banner-height, 0px);
     left: 0;
     right: 0;
     height: 64px;

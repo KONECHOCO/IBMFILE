@@ -16,6 +16,8 @@ dist-ssr
 .env
 .env.*
 !.env.example
+# AdMob ad unit IDs are not secret and the store build needs them
+!.env.production
 
 # IDEs & OS
 .vscode/*

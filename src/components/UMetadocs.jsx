@@ -31,9 +31,9 @@ export default function UMetadocs({ lang, translations, activeDb }) {
     if (!activeDb || !schema) return;
     setLoading(true);
     setError(null);
-    setSelected(null);
     api.tables(activeDb.id, schema)
-      .then((rows) => { setTables(rows); setSelected(rows[0] || null); })
+      // Keep a table the user already picked if it is in the new list (the list may arrive late)
+      .then((rows) => { setTables(rows); setSelected((prev) => rows.find((r) => r.name === prev?.name) || rows[0] || null); })
       .catch((e) => { setTables([]); setError(describe(e)); })
       .finally(() => setLoading(false));
   }, [activeDb?.id, schema]);

@@ -6,6 +6,7 @@ import {
 import { api, toRecords } from "../api/gateway";
 import { exportToCsv, exportToJson, exportToExcel } from "../utils/exportUtils";
 import { queryExamples } from "../data/queryExamples";
+import { trackAdAction } from "../services/monetization";
 
 // Column names that usually hold personal data. Masking is visual only;
 // real data protection comes from the database user's grants.
@@ -145,6 +146,7 @@ export default function UQueryCentral({ lang, translations, activeDb, connection
     try {
       const res = await api.query(activeDb.id, sql, maxRows);
       setResult(res);
+      trackAdAction();
       setTableSearch("");
     } catch (e) {
       setError(describe(e));

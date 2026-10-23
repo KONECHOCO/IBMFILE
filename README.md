@@ -25,7 +25,7 @@ reads the catalog and writes a tamper-evident audit trail. See [gateway/README.m
 | Connections — create, test, edit connections; read-only notes per driver | real |
 | Data catalog — schemas/libraries, tables, views, columns | real |
 | Audit — every sign-in, test and query, SHA-256 hash chain with verification | real |
-| Port Guard, Scheduled reports | preview with sample data, labelled as such |
+| Port Guard, Scheduled reports | not shown yet (components kept for a later release) |
 | Administration (admins only) — users and roles, password reset, license activation, system info for support | real |
 
 A **demo database** (SQLite with fictional sample data, always marked "DEMO")

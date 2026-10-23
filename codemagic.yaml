@@ -1,0 +1,85 @@
+# Plexa DB — build per App Store e Play Store (modello: OmniTransit).
+# iOS: profilo App Store in ios/profiles (creato via API App Store Connect, scade 16/09/2027).
+# Android: keystore "plexadb_android" da caricare su Codemagic (Code signing identities).
+# Nessun trigger automatico: la build si avvia a mano finché l'app non è pronta.
+workflows:
+  ios-app-store:
+    name: Plexa DB iOS App Store
+    max_build_duration: 90
+    instance_type: mac_mini_m4
+    integrations:
+      app_store_connect: Ikonet Solutions
+    environment:
+      ios_signing:
+        # Il certificato (con chiave privata) è su Codemagic; il profilo App Store di Plexa DB è nel repo
+        # (ios/profiles) e viene installato da uno script. Codemagic richiede almeno un profilo qui: quello di
+        # FuelSaver serve solo a questo, `xcode-project use-profiles` sceglie il profilo con bundle id corrispondente.
+        # Quando "plexadb_appstore" sarà importato su Codemagic, sostituirlo qui e togliere lo script.
+        provisioning_profiles:
+          - fuelsaver_appstore
+        certificates:
+          - ithelpdesk_distribution_20260916
+      vars:
+        XCODE_PROJECT: ios/App/App.xcodeproj
+        XCODE_SCHEME: App
+      xcode: latest
+      node: 22
+    scripts:
+      - name: Install npm dependencies
+        script: npm ci
+      - name: Build web app and sync iOS project
+        script: |
+          npm run build
+          npx cap sync ios
+      - name: Install App Store provisioning profile
+        script: |
+          PROFILES_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+          mkdir -p "$PROFILES_DIR"
+          cp ios/profiles/plexadb_appstore.mobileprovision "$PROFILES_DIR/00154c38-6938-48b3-9cc1-dae4f527aa31.mobileprovision"
+      - name: Set up signing profiles
+        script: xcode-project use-profiles
+      - name: Apply Codemagic build number
+        script: |
+          cd ios/App
+          agvtool new-version -all "$BUILD_NUMBER"
+      - name: Build IPA for App Store Connect
+        script: |
+          xcode-project build-ipa \
+            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false
+        submit_to_app_store: false
+
+  android-release:
+    name: Plexa DB Android
+    max_build_duration: 45
+    instance_type: linux_x2
+    environment:
+      android_signing:
+        - plexadb_android
+      vars:
+        PACKAGE_NAME: "com.ikonet.plexadb"
+      node: 22
+      java: 21
+    scripts:
+      - name: Install npm dependencies
+        script: npm ci
+      - name: Build web app and sync Android project
+        script: |
+          npm run build
+          npx cap sync android
+      - name: Set Android SDK location
+        script: echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"
+      - name: Build release AAB
+        script: |
+          cd android
+          chmod +x ./gradlew
+          ./gradlew bundleRelease
+    artifacts:
+      - android/app/build/outputs/bundle/release/*.aab

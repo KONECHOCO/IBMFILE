@@ -354,7 +354,21 @@ export const translations = {
       "devicesStep3": "Accedi con il tuo utente di questo gateway.",
       "scanGatewayQr": "Scansiona QR del gateway",
       "scanInstructions": "Inquadra il QR in Amministrazione → Dispositivi",
-      "qrNotGateway": "Questo QR non contiene l'indirizzo di un gateway Plexa DB."
+      "qrNotGateway": "Questo QR non contiene l'indirizzo di un gateway Plexa DB.",
+      "pro": {
+        "title": "Plexa DB Pro",
+        "subtitle": "Acquisto unico, per sempre",
+        "noAds": "Nessuna pubblicità",
+        "support": "Sostieni lo sviluppo di Plexa DB",
+        "buy": "Passa a Pro · {price}",
+        "fallbackPrice": "2,99 €",
+        "restore": "Ripristina acquisti",
+        "restored": "Acquisto ripristinato: Pro attivo.",
+        "notFound": "Nessun acquisto Pro trovato per questo account.",
+        "owned": "Pro attivo: grazie!",
+        "error": "Acquisto non riuscito. Riprova più tardi.",
+        "webOnly": "L'acquisto Pro è disponibile nell'app per iPhone, iPad e Android."
+      }
     }
   },
   "en": {
@@ -711,7 +725,21 @@ export const translations = {
       "devicesStep3": "Sign in with your user on this gateway.",
       "scanGatewayQr": "Scan gateway QR",
       "scanInstructions": "Point at the QR in Administration → Devices",
-      "qrNotGateway": "This QR code does not contain a Plexa DB gateway address."
+      "qrNotGateway": "This QR code does not contain a Plexa DB gateway address.",
+      "pro": {
+        "title": "Plexa DB Pro",
+        "subtitle": "One-time purchase, forever",
+        "noAds": "No ads",
+        "support": "Support the development of Plexa DB",
+        "buy": "Go Pro · {price}",
+        "fallbackPrice": "€2.99",
+        "restore": "Restore purchases",
+        "restored": "Purchase restored: Pro is active.",
+        "notFound": "No Pro purchase found for this account.",
+        "owned": "Pro active: thank you!",
+        "error": "Purchase failed. Please try again later.",
+        "webOnly": "Pro is available in the iPhone, iPad and Android app."
+      }
     }
   },
   "es": {
@@ -1068,7 +1096,21 @@ export const translations = {
       "devicesStep3": "Accede con tu usuario de este gateway.",
       "scanGatewayQr": "Escanear QR del gateway",
       "scanInstructions": "Apunta al QR de Administración → Dispositivos",
-      "qrNotGateway": "Este QR no contiene la dirección de un gateway Plexa DB."
+      "qrNotGateway": "Este QR no contiene la dirección de un gateway Plexa DB.",
+      "pro": {
+        "title": "Plexa DB Pro",
+        "subtitle": "Pago único, para siempre",
+        "noAds": "Sin publicidad",
+        "support": "Apoya el desarrollo de Plexa DB",
+        "buy": "Hazte Pro · {price}",
+        "fallbackPrice": "2,99 €",
+        "restore": "Restaurar compras",
+        "restored": "Compra restaurada: Pro activo.",
+        "notFound": "No se encontró ninguna compra Pro para esta cuenta.",
+        "owned": "Pro activo: ¡gracias!",
+        "error": "La compra no se completó. Inténtalo más tarde.",
+        "webOnly": "Pro está disponible en la app para iPhone, iPad y Android."
+      }
     }
   },
   "fr": {
@@ -1425,7 +1467,21 @@ export const translations = {
       "devicesStep3": "Connectez-vous avec votre utilisateur de cette passerelle.",
       "scanGatewayQr": "Scanner le QR de la passerelle",
       "scanInstructions": "Visez le QR dans Administration → Appareils",
-      "qrNotGateway": "Ce QR code ne contient pas l'adresse d'une passerelle Plexa DB."
+      "qrNotGateway": "Ce QR code ne contient pas l'adresse d'une passerelle Plexa DB.",
+      "pro": {
+        "title": "Plexa DB Pro",
+        "subtitle": "Achat unique, pour toujours",
+        "noAds": "Aucune publicité",
+        "support": "Soutenez le développement de Plexa DB",
+        "buy": "Passer à Pro · {price}",
+        "fallbackPrice": "2,99 €",
+        "restore": "Restaurer les achats",
+        "restored": "Achat restauré : Pro actif.",
+        "notFound": "Aucun achat Pro trouvé pour ce compte.",
+        "owned": "Pro actif : merci !",
+        "error": "L'achat a échoué. Réessayez plus tard.",
+        "webOnly": "Pro est disponible dans l'app iPhone, iPad et Android."
+      }
     }
   },
   "de": {
@@ -1782,7 +1838,21 @@ export const translations = {
       "devicesStep3": "Melden Sie sich mit Ihrem Benutzer dieses Gateways an.",
       "scanGatewayQr": "Gateway-QR scannen",
       "scanInstructions": "Richten Sie die Kamera auf den QR-Code unter Verwaltung → Geräte",
-      "qrNotGateway": "Dieser QR-Code enthält keine Plexa-DB-Gateway-Adresse."
+      "qrNotGateway": "Dieser QR-Code enthält keine Plexa-DB-Gateway-Adresse.",
+      "pro": {
+        "title": "Plexa DB Pro",
+        "subtitle": "Einmalkauf, für immer",
+        "noAds": "Keine Werbung",
+        "support": "Unterstützen Sie die Entwicklung von Plexa DB",
+        "buy": "Pro holen · {price}",
+        "fallbackPrice": "2,99 €",
+        "restore": "Käufe wiederherstellen",
+        "restored": "Kauf wiederhergestellt: Pro ist aktiv.",
+        "notFound": "Für dieses Konto wurde kein Pro-Kauf gefunden.",
+        "owned": "Pro aktiv: danke!",
+        "error": "Kauf fehlgeschlagen. Bitte später erneut versuchen.",
+        "webOnly": "Pro ist in der App für iPhone, iPad und Android erhältlich."
+      }
     }
   },
   "ja": {
@@ -2139,7 +2209,21 @@ export const translations = {
       "devicesStep3": "このゲートウェイのユーザーでサインインします。",
       "scanGatewayQr": "ゲートウェイの QR を読み取る",
       "scanInstructions": "管理 → デバイス の QR コードにカメラを向けてください",
-      "qrNotGateway": "この QR コードには Plexa DB ゲートウェイのアドレスが含まれていません。"
+      "qrNotGateway": "この QR コードには Plexa DB ゲートウェイのアドレスが含まれていません。",
+      "pro": {
+        "title": "Plexa DB Pro",
+        "subtitle": "買い切り・ずっと使えます",
+        "noAds": "広告なし",
+        "support": "Plexa DB の開発を支援",
+        "buy": "Pro にアップグレード · {price}",
+        "fallbackPrice": "¥500",
+        "restore": "購入を復元",
+        "restored": "購入を復元しました：Pro が有効です。",
+        "notFound": "このアカウントで Pro の購入は見つかりませんでした。",
+        "owned": "Pro 有効：ありがとうございます！",
+        "error": "購入できませんでした。後でもう一度お試しください。",
+        "webOnly": "Pro は iPhone・iPad・Android のアプリで購入できます。"
+      }
     }
   }
 };

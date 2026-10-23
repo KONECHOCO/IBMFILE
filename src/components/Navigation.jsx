@@ -1,8 +1,6 @@
 import React from "react";
 import { 
   Database, 
-  ShieldAlert, 
-  CalendarClock, 
   Layers, 
   FileCheck2, 
   Settings2,
@@ -13,8 +11,8 @@ import {
 export const NAV_ITEMS = [
   { id: "queryCentral", icon: Database, key: "queryCentral" },
   { id: "dbSettings", icon: KeyRound, key: "dbSettings" },
-  { id: "xLock", icon: ShieldAlert, key: "xLock" },
-  { id: "uSchedule", icon: CalendarClock, key: "uSchedule" },
+  // Port Guard (xLock) and Scheduled reports (uSchedule) stay hidden until they work on real data:
+  // the components are kept in src/components for when they do.
   { id: "uMetadocs", icon: Layers, key: "uMetadocs" },
   { id: "activityLog", icon: FileCheck2, key: "activityLog" },
   { id: "admin", icon: Settings2, key: "admin", adminOnly: true },

@@ -9,6 +9,10 @@ import ActivityLog from "./components/ActivityLog";
 import AdminPanel from "./components/AdminPanel";
 import DatabaseSettings from "./components/DatabaseSettings";
 import GatewayLogin from "./components/GatewayLogin";
+import AdBanner from "./components/AdBanner";
+import AdDiagnostics from "./components/AdDiagnostics";
+import ProModal from "./components/ProModal";
+import { initMonetization, trackAdAction } from "./services/monetization";
 import { translations } from "./i18n/translations";
 import { api, getSession, logout, setUnauthorizedHandler } from "./api/gateway";
 
@@ -32,6 +36,17 @@ export default function App() {
   const [user, setUser] = useState(getSession().token ? getSession().user : null);
   const [connections, setConnections] = useState([]);
   const [activeDb, setActiveDbState] = useState(null);
+  const [proOpen, setProOpen] = useState(false);
+
+  useEffect(() => {
+    initMonetization();
+  }, []);
+
+  // Every module change is a natural break for a full-screen ad (see monetization.js)
+  const changeTab = (tab) => {
+    if (tab !== currentTab) trackAdAction();
+    setCurrentTab(tab);
+  };
 
   // Sync theme attribute to HTML tag
   useEffect(() => {
@@ -90,8 +105,21 @@ export default function App() {
   const shownConnections = connections.map(localize);
   const shownActiveDb = localize(activeDb);
 
+  const monetization = (
+    <>
+      <AdBanner />
+      <AdDiagnostics />
+      <ProModal isOpen={proOpen} onClose={() => setProOpen(false)} u={ui} />
+    </>
+  );
+
   if (!user) {
-    return <GatewayLogin lang={lang} setLang={setLang} translations={translations} onLoggedIn={setUser} />;
+    return (
+      <>
+        <GatewayLogin lang={lang} setLang={setLang} translations={translations} onLoggedIn={setUser} />
+        {monetization}
+      </>
+    );
   }
 
   // Render view component
@@ -170,14 +198,15 @@ export default function App() {
         activeDb={shownActiveDb}
         user={user}
         onLogout={handleLogout}
-        setCurrentTab={setCurrentTab}
+        onOpenPro={() => setProOpen(true)}
+        setCurrentTab={changeTab}
       />
 
       <div className="workspace-layout">
         <Sidebar
           user={user}
           currentTab={currentTab}
-          setCurrentTab={setCurrentTab}
+          setCurrentTab={changeTab}
           translations={translations}
           lang={lang}
           activeDb={shownActiveDb}
@@ -192,10 +221,11 @@ export default function App() {
       <MobileTabBar
         user={user}
         currentTab={currentTab}
-        setCurrentTab={setCurrentTab}
+        setCurrentTab={changeTab}
         translations={translations}
         lang={lang}
       />
+      {monetization}
     </div>
   );
 }

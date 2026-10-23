@@ -17,6 +17,22 @@
         "dev"
       ],
       "port": 5173
+    },
+    {
+      "name": "web-storeshots",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "5174",
+        "--strictPort"
+      ],
+      "port": 5174,
+      "env": {
+        "PLEXA_GATEWAY_URL": "https://plexa.ikonetsolutions.com"
+      }
     }
   ]
 }

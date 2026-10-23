@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Plexa DB — Supporto</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <style>
+    body { font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: #161616; color: #e0e0e0; margin: 0; line-height: 1.6; }
+    main { max-width: 760px; margin: 0 auto; padding: 32px 16px 64px; }
+    h1 { color: #fff; } h2 { color: #78a9ff; margin-top: 2em; font-size: 1.15em; }
+    a { color: #78a9ff; } hr { border: 0; border-top: 1px solid #393939; margin: 48px 0; }
+    code { background: #262626; padding: 1px 5px; }
+    .muted { color: #a8a8a8; font-size: 14px; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Plexa DB — Supporto</h1>
+  <p>Scrivici a <a href="mailto:konechocoproduction@gmail.com">konechocoproduction@gmail.com</a>. Se ti è possibile, allega il riepilogo da <em>Amministrazione → Sistema e assistenza → Copia riepilogo</em> (non contiene password né dati).</p>
+
+  <h2>Provare l'app</h2>
+  <p>Apri l'app e tocca <strong>Entra nella demo</strong>: ti colleghi al gateway dimostrativo pubblico con dati di esempio (utente <code>demo</code>, password <code>plexa-demo</code>).</p>
+
+  <h2>Collegare i database della tua azienda</h2>
+  <p>Il reparto IT installa il gateway Plexa DB su un PC o server della rete aziendale e aggiunge le connessioni (IBM i / AS400, PostgreSQL, MySQL, SQL Server, Oracle, Snowflake). Poi, nell'app, tocca <strong>Scansiona QR del gateway</strong> e inquadra il codice in <em>Amministrazione → Dispositivi</em>, oppure scrivi l'indirizzo del gateway. Fuori ufficio serve la VPN aziendale.</p>
+
+  <h2>Problemi frequenti</h2>
+  <ul>
+    <li><strong>Gateway non raggiungibile</strong>: controlla di essere sulla rete dell'ufficio o in VPN e che il gateway sia avviato con <code>PLEXA_HOST=0.0.0.0</code>.</li>
+    <li><strong>IBM i: timeout</strong>: la porta del database è la 446 (non la 23 dell'emulatore 5250); il firewall deve permettere 446, 449 e 8470–8476.</li>
+    <li><strong>Password dimenticata</strong>: un amministratore la reimposta in <em>Amministrazione → Utenti</em>.</li>
+  </ul>
+  <p class="muted"><a href="/privacy.html">Informativa sulla privacy</a></p>
+
+  <hr />
+
+  <div lang="en">
+  <h1>Plexa DB — Support</h1>
+  <p>Write to <a href="mailto:konechocoproduction@gmail.com">konechocoproduction@gmail.com</a>. If possible, attach the summary from <em>Administration → System &amp; support → Copy summary</em> (no passwords or data).</p>
+  <h2>Try the app</h2>
+  <p>Open the app and tap <strong>Enter the demo</strong>: you connect to the public demo gateway with sample data (user <code>demo</code>, password <code>plexa-demo</code>).</p>
+  <h2>Connect your company databases</h2>
+  <p>IT installs the Plexa DB gateway on a PC or server in the company network and adds the connections (IBM i / AS400, PostgreSQL, MySQL, SQL Server, Oracle, Snowflake). Then, in the app, tap <strong>Scan gateway QR</strong> and point at the code in <em>Administration → Devices</em>, or type the gateway address. Outside the office you need the company VPN.</p>
+  <h2>Common issues</h2>
+  <ul>
+    <li><strong>Gateway unreachable</strong>: make sure you are on the office network or VPN and that the gateway runs with <code>PLEXA_HOST=0.0.0.0</code>.</li>
+    <li><strong>IBM i: timeout</strong>: the database port is 446 (not 23, the 5250 emulator); the firewall must allow 446, 449 and 8470–8476.</li>
+    <li><strong>Forgotten password</strong>: an administrator resets it in <em>Administration → Users</em>.</li>
+  </ul>
+  <p class="muted"><a href="/privacy.html">Privacy policy</a></p>
+  </div>
+</main>
+</body>
+</html>

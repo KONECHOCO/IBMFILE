@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { 
   ShieldCheck, 
   Database, 
@@ -10,8 +10,10 @@ import {
   KeyRound,
   Settings2,
   LogOut,
-  User
+  User,
+  Crown
 } from "lucide-react";
+import { toggleTestAds, useMonetization } from "../services/monetization";
 import BrandMark from "./BrandMark";
 
 export default function Header({
@@ -23,16 +25,29 @@ export default function Header({
   activeDb,
   user,
   onLogout,
+  onOpenPro,
   setCurrentTab
 }) {
   const t = translations[lang] || translations.en;
   const u = t.ui;
+  const { native, isPro } = useMonetization();
+
+  // 7 taps on the logo: test ads on/off, for checking ads in TestFlight / internal test builds
+  const taps = useRef({ n: 0, at: 0 });
+  const onLogoTap = () => {
+    const now = Date.now();
+    taps.current = { n: now - taps.current.at < 1500 ? taps.current.n + 1 : 1, at: now };
+    if (taps.current.n >= 7) {
+      taps.current.n = 0;
+      window.alert(toggleTestAds() ? "Test ads ON — restart the app" : "Test ads OFF — restart the app");
+    }
+  };
 
   return (
     <header className="ibm-header">
       {/* Brand & System ID */}
       <div className="ibm-brand">
-        <BrandMark className="ibm-bars-icon" />
+        <span onClick={onLogoTap} style={{ display: "inline-flex" }}><BrandMark className="ibm-bars-icon" /></span>
         <div className="ibm-title-group">
           <div className="ibm-title">
             <span>{t.systemTitle}</span>
@@ -71,6 +86,12 @@ export default function Header({
         >
           <KeyRound size={16} color="var(--cds-blue-light)" />
         </button>
+
+        {native && !isPro && (
+          <button className="btn-icon" onClick={onOpenPro} title={u.pro.title} style={{ color: "var(--cds-amber)" }}>
+            <Crown size={16} />
+          </button>
+        )}
 
         {/* Signed-in gateway user */}
         <span className="telemetry-chip mono header-user-chip" title={u.roles[user?.role] || user?.role}>
