@@ -1,0 +1,15 @@
+Hello App Review team,
+
+Thank you for your message. We confirm that Plexa DB does NOT contain any VPN functionality.
+
+- The app does not use the NetworkExtension framework, has no VPN / Personal VPN / Packet Tunnel entitlement and does not create, configure or route traffic through any VPN or tunnel.
+- The app collects no user information through a VPN, and therefore none is shared with third parties for that purpose.
+
+What the app does: Plexa DB is a read-only SQL client. It sends ordinary HTTPS requests to a single server address chosen by the user, a "Plexa DB gateway" that a company installs in its own network, or our public demo gateway (https://plexa.ikonetsolutions.com) with made-up sample data. The Local Network permission and NSAllowsLocalNetworking are used only to reach a company gateway on the office LAN by its local IP address.
+
+The word "VPN" appeared in our description only to say that employees can reach their company's gateway when their device is already on the company network (for example through the company's own VPN, set up outside our app). To avoid any confusion we have removed that wording from the description in all languages, and we have added this clarification to the App Review Information notes.
+
+To review the app: on the sign-in screen tap "Entra nella demo / Enter the demo" (user: demo, password: plexa-demo).
+
+Best regards,
+INZA KONE — Ikonet Solutions
