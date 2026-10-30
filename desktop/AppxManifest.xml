@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+         xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+         xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+         xmlns:desktop2="http://schemas.microsoft.com/appx/manifest/desktop/windows10/2"
+         IgnorableNamespaces="uap rescap desktop2">
+  <!-- Name comes from the name reserved in Partner Center (Product identity page). -->
+  <Identity Name="IKONETSOLUTIONS.PlexaDB" Publisher="CN=4C92E42E-BF2E-4754-85E0-62CB2D50F185" Version="1.0.0.0" ProcessorArchitecture="x64" />
+  <Properties>
+    <DisplayName>Plexa DB</DisplayName>
+    <PublisherDisplayName>IKONETSOLUTIONS</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+  <Resources>
+    <Resource Language="it" />
+    <Resource Language="en-us" />
+    <Resource Language="fr-fr" />
+    <Resource Language="es-es" />
+    <Resource Language="de-de" />
+    <Resource Language="ja" />
+  </Resources>
+  <Applications>
+    <Application Id="PlexaDB" Executable="PlexaDB.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements DisplayName="Plexa DB" Description="Read-only SQL client for IBM i, PostgreSQL, MySQL, SQL Server, Oracle and Snowflake"
+                          BackgroundColor="transparent" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+  <Extensions>
+    <!-- Business plan: colleagues reach the gateway from the office network. Never opened on public networks. -->
+    <desktop2:Extension Category="windows.firewallRules">
+      <desktop2:FirewallRules Executable="gateway\plexa-gateway.exe">
+        <desktop2:Rule Direction="in" IPProtocol="TCP" LocalPortMin="8787" LocalPortMax="8787" Profile="domainAndPrivate" />
+      </desktop2:FirewallRules>
+    </desktop2:Extension>
+  </Extensions>
+  <Capabilities>
+    <Capability Name="internetClient" />
+    <Capability Name="privateNetworkClientServer" />
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>

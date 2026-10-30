@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Server, LogIn, ShieldCheck, AlertCircle, Globe, PlayCircle, QrCode } from "lucide-react";
 import { canScanQr, scanGatewayUrl } from "../native/scanner";
+import { isWindowsStoreApp } from "../native/windowsStore";
 import { api, getSession, setAuth, setGatewayUrl } from "../api/gateway";
 import { BRAND } from "../config/brand";
 import BrandMark from "./BrandMark";
@@ -92,7 +93,7 @@ export default function GatewayLogin({ lang, setLang, translations, onLoggedIn }
             <BrandMark size={36} />
             <div>
               <div style={{ fontWeight: 700, fontSize: "18px" }}>{BRAND.name}</div>
-              <div style={{ fontSize: "12px", color: "var(--cds-text-muted)" }}>{u.loginTagline}</div>
+              <div style={{ fontSize: "12px", color: "var(--cds-text-muted)" }}>{isWindowsStoreApp() ? (translations[lang] || translations.en).tagline : u.loginTagline}</div>
             </div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
@@ -103,6 +104,9 @@ export default function GatewayLogin({ lang, setLang, translations, onLoggedIn }
           </div>
         </div>
 
+        {/* The desktop app carries its own gateway: there is no address to enter. */}
+        {!isWindowsStoreApp() && (
+          <>
         <label style={label}>
           <Server size={12} style={{ verticalAlign: "-2px", marginRight: "4px" }} />
           {u.gatewayUrl}
@@ -136,6 +140,9 @@ export default function GatewayLogin({ lang, setLang, translations, onLoggedIn }
           ) : checking ? u.testing : u.gatewayHelp}
         </div>
 
+          </>
+        )}
+
         {health?.publicDemo && health.demoCredentials && (
           <div className="card-panel" style={{ padding: "12px", fontSize: "12px", background: "rgba(36, 161, 72, 0.08)", borderColor: "rgba(36, 161, 72, 0.35)" }}>
             <div style={{ fontWeight: 600, marginBottom: "4px" }}>{u.publicDemoTitle}</div>
@@ -154,7 +161,7 @@ export default function GatewayLogin({ lang, setLang, translations, onLoggedIn }
           <form onSubmit={submit}>
             {health.setupRequired && (
               <div className="card-panel" style={{ padding: "10px 12px", fontSize: "12px", background: "rgba(15, 98, 254, 0.06)", borderColor: "rgba(15, 98, 254, 0.3)" }}>
-                {u.setupIntro}
+                {health.setupCodeNeeded === false ? u.store.setupIntro : u.setupIntro}
               </div>
             )}
             <label style={label}>{u.username}</label>
@@ -164,7 +171,7 @@ export default function GatewayLogin({ lang, setLang, translations, onLoggedIn }
             <input className="ai-input" type="password" style={{ width: "100%", marginBottom: "12px" }} value={password}
               onChange={(e) => setPassword(e.target.value)} autoComplete={health.setupRequired ? "new-password" : "current-password"}
               required minLength={8} />
-            {health.setupRequired && (
+            {health.setupRequired && health.setupCodeNeeded !== false && (
               <>
                 <label style={label}>{u.setupCode}</label>
                 <input className="ai-input mono" style={{ width: "100%", marginBottom: "12px" }} value={setupCode}
@@ -178,7 +185,7 @@ export default function GatewayLogin({ lang, setLang, translations, onLoggedIn }
           </form>
         )}
 
-        {!health?.publicDemo && baseUrl.replace(/\/+$/, "") !== BRAND.demoGatewayUrl && (
+        {!health?.publicDemo && !health?.storeMode && baseUrl.replace(/\/+$/, "") !== BRAND.demoGatewayUrl && (
           <button type="button" className="ibm-btn ibm-btn-secondary ibm-btn-sm" style={{ width: "100%", justifyContent: "center", marginTop: "12px" }}
             onClick={tryPublicDemo} disabled={checking}>
             <PlayCircle size={14} />

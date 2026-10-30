@@ -12,6 +12,7 @@ import GatewayLogin from "./components/GatewayLogin";
 import AdBanner from "./components/AdBanner";
 import AdDiagnostics from "./components/AdDiagnostics";
 import ProModal from "./components/ProModal";
+import StoreBanner from "./components/StorePlans";
 import { initMonetization, trackAdAction } from "./services/monetization";
 import { translations } from "./i18n/translations";
 import { api, getSession, logout, setUnauthorizedHandler } from "./api/gateway";
@@ -37,6 +38,7 @@ export default function App() {
   const [connections, setConnections] = useState([]);
   const [activeDb, setActiveDbState] = useState(null);
   const [proOpen, setProOpen] = useState(false);
+  const [license, setLicense] = useState(null);
 
   useEffect(() => {
     initMonetization();
@@ -96,7 +98,9 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (user) reloadConnections().catch(() => {});
+    if (!user) return;
+    reloadConnections().catch(() => {});
+    api.license().then(setLicense).catch(() => {});
   }, [user, reloadConnections]);
 
   // The demo connection's name comes from the gateway in English; show it in the UI language.
@@ -213,6 +217,7 @@ export default function App() {
         />
 
         <main className="main-view-container">
+          <StoreBanner u={ui} license={license} />
           {renderCurrentView()}
         </main>
       </div>

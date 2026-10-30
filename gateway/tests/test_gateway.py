@@ -240,3 +240,41 @@ def test_cli_reset_password(monkeypatch, capsys):
     monkeypatch.setattr(cli.getpass, "getpass", lambda prompt="": "cli-pass-123")
     assert cli.main(["reset-password", "mario"]) == 0
     assert "Password changed" in capsys.readouterr().out
+
+
+# ── Microsoft Store mode ────────────────────────────────────────────────────
+
+def test_store_mode_plans(client, admin, demo_id, monkeypatch):
+    from plexa_gateway import config, licensing
+    monkeypatch.setattr(config, "STORE_MODE", True)
+    monkeypatch.setattr(config, "SHELL_TOKEN", "shell-secret")
+    push = lambda plan, tok="shell-secret": client.post("/api/internal/store-license", json={"plan": plan, "expires": "2030-01-01"}, headers={"X-Plexa-Shell-Token": tok})
+    run = lambda: client.post(f"/api/connections/{demo_id}/query", headers=admin, json={"sql": "SELECT 1"}).status_code
+    try:
+        assert push("business", "wrong").status_code == 403
+        assert push("nonsense").status_code == 400
+
+        assert push("expired").status_code == 200
+        assert run() == 402
+        assert client.get(f"/api/connections/{demo_id}/schemas", headers=admin).status_code == 402
+        assert client.get("/api/license", headers=admin).json()["valid"] is False
+
+        assert push("trial").status_code == 200
+        assert run() == 200
+        assert client.get("/api/license", headers=admin).json()["maxUsers"] == 1
+        r = client.post("/api/users", headers=admin, json={"username": "storeuser", "password": "store-pass-1", "role": "viewer"})
+        assert r.status_code == 402 and "Upgrade" in r.json()["detail"]
+
+        assert push("pro").status_code == 200
+        assert client.get("/api/license", headers=admin).json()["maxConnections"] is None
+        assert client.post("/api/users", headers=admin, json={"username": "storeuser", "password": "store-pass-1", "role": "viewer"}).status_code == 402
+
+        assert push("business").status_code == 200
+        assert client.post("/api/users", headers=admin, json={"username": "storeuser", "password": "store-pass-1", "role": "viewer"}).status_code == 200
+        assert client.post("/api/admin/license", headers=admin, json={"key": "PLEXA1.aaaa.bbbb"}).status_code == 400
+    finally:
+        licensing.set_store_entitlement("pending")
+
+
+def test_store_endpoint_closed_outside_store_mode(client):
+    assert client.post("/api/internal/store-license", json={"plan": "business"}, headers={"X-Plexa-Shell-Token": ""}).status_code == 403

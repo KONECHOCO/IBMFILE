@@ -116,12 +116,18 @@ class SetupIn(Credentials):
 
 
 @app.get("/api/health")
-def health():
+def health(request: Request):
     info = {"status": "ok", "product": "Plexa DB Gateway", "version": __version__,
-            "setupRequired": store.count_users() == 0, "maxRows": config.MAX_ROWS, "publicDemo": config.PUBLIC_DEMO}
+            "setupRequired": store.count_users() == 0, "maxRows": config.MAX_ROWS, "publicDemo": config.PUBLIC_DEMO,
+            "storeMode": config.STORE_MODE, "setupCodeNeeded": _setup_code_needed(request)}
     if config.PUBLIC_DEMO:
         info["demoCredentials"] = {"username": config.DEMO_USER, "password": config.DEMO_PASSWORD}
     return info
+
+
+def _setup_code_needed(request: Request) -> bool:
+    # The Store app has no console to read the code from, and the person at this PC owns it.
+    return not (config.STORE_MODE and request.client and request.client.host in ("127.0.0.1", "::1"))
 
 
 @app.post("/api/auth/setup")
@@ -130,7 +136,9 @@ def setup(body: SetupIn, request: Request):
     if store.count_users() > 0:
         raise HTTPException(409, "The gateway is already set up.")
     _throttle(_ip(request))
-    if not SETUP_CODE["value"] or not secrets.compare_digest(body.setupCode.strip(), SETUP_CODE["value"]):
+    if not _setup_code_needed(request):
+        pass
+    elif not SETUP_CODE["value"] or not secrets.compare_digest(body.setupCode.strip(), SETUP_CODE["value"]):
         _fail(_ip(request))
         raise HTTPException(403, "Wrong setup code: you can find it in the gateway console.")
     user = store.create_user(body.username, hash_password(body.password), "admin")
@@ -301,6 +309,11 @@ def delete_connection(conn_id: str, request: Request, admin: dict = Depends(admi
     return {"ok": True}
 
 
+def _licensed() -> None:
+    if not licensing.can_use_databases():
+        raise HTTPException(402, "The trial has ended. Purchase Plexa DB in Administration → License to keep using your databases.")
+
+
 def _db_error(e: Exception) -> HTTPException:
     if isinstance(e, drivers.DriverUnavailable):
         return HTTPException(501, str(e))
@@ -309,6 +322,7 @@ def _db_error(e: Exception) -> HTTPException:
 
 
 def _test(c: dict, request: Request, user: dict):
+    _licensed()
     try:
         result = runner.test_connection(c)
     except Exception as e:
@@ -351,6 +365,7 @@ class QueryIn(BaseModel):
 
 @app.post("/api/connections/{conn_id}/query")
 def query(conn_id: str, body: QueryIn, request: Request, user: dict = Depends(current_user)):
+    _licensed()
     c = _conn_or_404(conn_id)
     _rate_limit_queries(_ip(request))
     try:
@@ -371,6 +386,7 @@ def query(conn_id: str, body: QueryIn, request: Request, user: dict = Depends(cu
 
 
 def _catalog(fn, *args):
+    _licensed()
     try:
         return fn(*args)
     except Exception as e:
@@ -473,6 +489,29 @@ def system_info(_: dict = Depends(admin_user)):
     }
 
 
+class StoreEntitlementIn(BaseModel):
+    plan: str
+    expires: Optional[str] = None
+
+
+@app.post("/api/internal/store-license", include_in_schema=False)
+def store_license(body: StoreEntitlementIn, x_plexa_shell_token: Optional[str] = Header(None)):
+    """Desktop shell only: reports what the Microsoft Store says this PC is entitled to."""
+    if not config.STORE_MODE or not config.SHELL_TOKEN or not secrets.compare_digest(x_plexa_shell_token or "", config.SHELL_TOKEN):
+        raise HTTPException(403, "Not allowed.")
+    try:
+        licensing.set_store_entitlement(body.plan, body.expires)
+    except licensing.LicenseError as e:
+        raise HTTPException(400, str(e))
+    return licensing.status()
+
+
+@app.get("/api/license")
+def license_for_user(_: dict = Depends(current_user)):
+    st = licensing.status()
+    return {k: st.get(k) for k in ("plan", "valid", "store", "expires", "maxUsers", "maxConnections")}
+
+
 @app.get("/api/admin/license")
 def license_status(_: dict = Depends(admin_user)):
     return licensing.status()
@@ -480,6 +519,8 @@ def license_status(_: dict = Depends(admin_user)):
 
 @app.post("/api/admin/license")
 def license_activate(body: LicenseIn, request: Request, admin: dict = Depends(admin_user)):
+    if config.STORE_MODE:
+        raise HTTPException(400, "This copy is licensed through the Microsoft Store.")
     try:
         st = licensing.activate(body.key)
     except licensing.LicenseError as e:

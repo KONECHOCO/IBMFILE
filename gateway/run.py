@@ -8,9 +8,7 @@ import uvicorn
 from plexa_gateway import config
 
 if __name__ == "__main__":
-    uvicorn.run(
-        "plexa_gateway.main:app",
-        host=config.HOST,
-        port=config.PORT,
-        app_dir=os.path.dirname(os.path.abspath(__file__)),
-    )
+    # Imported here (not by name) so it also works inside the PyInstaller executable
+    from plexa_gateway.main import app
+
+    uvicorn.run(app, host=config.HOST, port=config.PORT, log_config=None if getattr(sys, "frozen", False) else uvicorn.config.LOGGING_CONFIG)

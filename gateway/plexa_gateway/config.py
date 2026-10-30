@@ -44,6 +44,11 @@ DEMO_USER = os.environ.get("PLEXA_DEMO_USER", "demo")
 DEMO_PASSWORD = os.environ.get("PLEXA_DEMO_PASSWORD", "plexa-demo")
 QUERIES_PER_MINUTE = int(os.environ.get("PLEXA_QUERIES_PER_MINUTE", "30" if PUBLIC_DEMO else "0"))
 
+# Windows desktop app from the Microsoft Store: the shell (desktop/) reads the Store license
+# and pushes the plan to the gateway using this per-run token. Signed license keys are not used.
+STORE_MODE = os.environ.get("PLEXA_STORE_MODE", "0") in ("1", "true", "yes")
+SHELL_TOKEN = os.environ.get("PLEXA_SHELL_TOKEN", "")
+
 # Set to 1 only behind a reverse proxy that overwrites X-Real-IP (e.g. nginx).
 TRUST_PROXY = os.environ.get("PLEXA_TRUST_PROXY", "0") in ("1", "true", "yes")
 

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Settings2, Users, KeyRound, Server, Copy, Check, Trash2, UserPlus, RefreshCw, ShieldCheck, ShieldAlert, Smartphone, AlertTriangle } from "lucide-react";
 import QRCode from "qrcode";
 import { api } from "../api/gateway";
+import { StorePlans, trialDaysLeft } from "./StorePlans";
 
 const ROLES = ["admin", "analyst", "viewer"];
 
@@ -157,6 +158,24 @@ function LicenseTab({ u, info, reload }) {
   };
 
   const limit = (n) => (n === null || n === undefined ? u.unlimited : n);
+
+  if (lic.store) {
+    const days = lic.plan === "trial" ? trialDaysLeft(lic.expires) : null;
+    return (
+      <div>
+        <table className="ibm-data-table" style={{ marginBottom: "16px" }}>
+          <tbody>
+            <tr><td style={{ width: "40%", color: "var(--cds-text-muted)" }}>{u.plan}</td><td>{u.store.plans[lic.plan] || lic.plan}{days !== null ? ` · ${u.store.trialDays.replace("{n}", days)}` : ""}</td></tr>
+            <tr><td style={{ color: "var(--cds-text-muted)" }}>{u.usersLimit}</td><td className="mono">{info.users} / {limit(lic.maxUsers)}</td></tr>
+            <tr><td style={{ color: "var(--cds-text-muted)" }}>{u.connectionsLimit}</td><td className="mono">{info.connections} / {limit(lic.maxConnections)}</td></tr>
+          </tbody>
+        </table>
+        <StorePlans u={u} license={lic} />
+        <p style={{ fontSize: "11px", color: "var(--cds-text-muted)" }}>{u.store.manage}</p>
+      </div>
+    );
+  }
+
   const rows = [
     [u.plan, lic.valid ? lic.plan : "community"],
     [u.customer, lic.customer || "—"],

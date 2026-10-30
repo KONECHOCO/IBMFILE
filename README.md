@@ -64,3 +64,13 @@ or the web build served by the gateway.
 
 IBM i, Db2, AS/400 and the other database names are trademarks of their owners and are
 used only to describe compatibility. Plexa DB is not affiliated with or endorsed by them.
+
+## Microsoft Store (Windows desktop app)
+
+`desktop/` packages the app as an MSIX: a C# shell (WebView2) that starts the bundled gateway and a
+reduced Java runtime for IBM i. Build with `powershell -ExecutionPolicy Bypass -File desktop\build.ps1`.
+
+Plans are bought only through the Store and read by the shell (`StoreLicense.cs`):
+the app itself is **Pro** (paid, with a 7-day free trial) and **Business** is an add-on subscription
+with product ID `plexa_business`. Trial and Pro keep the gateway on this PC (`127.0.0.1`);
+only Business opens it to the office network.

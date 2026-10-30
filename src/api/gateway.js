@@ -113,6 +113,7 @@ export const api = {
   deleteUser: (id) => request(`/api/users/${id}`, { method: "DELETE" }),
   updateUser: (id, changes) => request(`/api/users/${id}`, { method: "PUT", body: changes }),
 
+  license: () => request("/api/license"),
   system: () => request("/api/admin/system"),
   activateLicense: (key) => request("/api/admin/license", { method: "POST", body: { key } }),
   removeLicense: () => request("/api/admin/license", { method: "DELETE" }),

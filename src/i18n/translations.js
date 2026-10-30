@@ -368,6 +368,26 @@ export const translations = {
         "owned": "Pro attivo: grazie!",
         "error": "Acquisto non riuscito. Riprova più tardi.",
         "webOnly": "L'acquisto Pro è disponibile nell'app per iPhone, iPad e Android."
+      },
+      "store": {
+        "setupIntro": "Primo avvio: crea il tuo utente amministratore.",
+        "proTitle": "Pro",
+        "proText": "Acquisto unico. Questo PC, 1 utente, connessioni illimitate.",
+        "businessTitle": "Business",
+        "businessText": "Abbonamento annuale. Utenti illimitati: i colleghi accedono dalla rete dell'ufficio.",
+        "buy": "Acquista nel Microsoft Store",
+        "trialActive": "Prova gratuita attiva.",
+        "trialDays": "Prova gratuita: {n} giorni rimasti.",
+        "trialEnded": "La prova gratuita è terminata. Scegli un piano per continuare a usare i tuoi database.",
+        "purchaseError": "Acquisto non completato. Controlla la connessione e riprova.",
+        "manage": "Gli acquisti e l'abbonamento si gestiscono dal tuo account Microsoft.",
+        "plans": {
+          "trial": "Prova gratuita",
+          "pro": "Pro",
+          "business": "Business",
+          "expired": "Prova terminata",
+          "pending": "Verifica in corso…"
+        }
       }
     }
   },
@@ -739,6 +759,26 @@ export const translations = {
         "owned": "Pro active: thank you!",
         "error": "Purchase failed. Please try again later.",
         "webOnly": "Pro is available in the iPhone, iPad and Android app."
+      },
+      "store": {
+        "setupIntro": "First start: create your administrator user.",
+        "proTitle": "Pro",
+        "proText": "One-time purchase. This PC, 1 user, unlimited connections.",
+        "businessTitle": "Business",
+        "businessText": "Annual subscription. Unlimited users: colleagues sign in from the office network.",
+        "buy": "Buy in the Microsoft Store",
+        "trialActive": "Free trial active.",
+        "trialDays": "Free trial: {n} days left.",
+        "trialEnded": "Your free trial has ended. Choose a plan to keep using your databases.",
+        "purchaseError": "Purchase not completed. Check your connection and try again.",
+        "manage": "Purchases and your subscription are managed from your Microsoft account.",
+        "plans": {
+          "trial": "Free trial",
+          "pro": "Pro",
+          "business": "Business",
+          "expired": "Trial ended",
+          "pending": "Checking…"
+        }
       }
     }
   },
@@ -1110,6 +1150,26 @@ export const translations = {
         "owned": "Pro activo: ¡gracias!",
         "error": "La compra no se completó. Inténtalo más tarde.",
         "webOnly": "Pro está disponible en la app para iPhone, iPad y Android."
+      },
+      "store": {
+        "setupIntro": "Primer inicio: crea tu usuario administrador.",
+        "proTitle": "Pro",
+        "proText": "Pago único. Este PC, 1 usuario, conexiones ilimitadas.",
+        "businessTitle": "Business",
+        "businessText": "Suscripción anual. Usuarios ilimitados: los compañeros acceden desde la red de la oficina.",
+        "buy": "Comprar en Microsoft Store",
+        "trialActive": "Prueba gratuita activa.",
+        "trialDays": "Prueba gratuita: quedan {n} días.",
+        "trialEnded": "La prueba gratuita ha terminado. Elige un plan para seguir usando tus bases de datos.",
+        "purchaseError": "Compra no completada. Revisa la conexión e inténtalo de nuevo.",
+        "manage": "Las compras y la suscripción se gestionan desde tu cuenta Microsoft.",
+        "plans": {
+          "trial": "Prueba gratuita",
+          "pro": "Pro",
+          "business": "Business",
+          "expired": "Prueba terminada",
+          "pending": "Comprobando…"
+        }
       }
     }
   },
@@ -1481,6 +1541,26 @@ export const translations = {
         "owned": "Pro actif : merci !",
         "error": "L'achat a échoué. Réessayez plus tard.",
         "webOnly": "Pro est disponible dans l'app iPhone, iPad et Android."
+      },
+      "store": {
+        "setupIntro": "Premier démarrage : créez votre utilisateur administrateur.",
+        "proTitle": "Pro",
+        "proText": "Achat unique. Ce PC, 1 utilisateur, connexions illimitées.",
+        "businessTitle": "Business",
+        "businessText": "Abonnement annuel. Utilisateurs illimités : vos collègues se connectent depuis le réseau du bureau.",
+        "buy": "Acheter sur le Microsoft Store",
+        "trialActive": "Essai gratuit actif.",
+        "trialDays": "Essai gratuit : {n} jours restants.",
+        "trialEnded": "Votre essai gratuit est terminé. Choisissez une formule pour continuer à utiliser vos bases.",
+        "purchaseError": "Achat non finalisé. Vérifiez la connexion et réessayez.",
+        "manage": "Les achats et l'abonnement se gèrent depuis votre compte Microsoft.",
+        "plans": {
+          "trial": "Essai gratuit",
+          "pro": "Pro",
+          "business": "Business",
+          "expired": "Essai terminé",
+          "pending": "Vérification…"
+        }
       }
     }
   },
@@ -1852,6 +1932,26 @@ export const translations = {
         "owned": "Pro aktiv: danke!",
         "error": "Kauf fehlgeschlagen. Bitte später erneut versuchen.",
         "webOnly": "Pro ist in der App für iPhone, iPad und Android erhältlich."
+      },
+      "store": {
+        "setupIntro": "Erster Start: Legen Sie Ihren Administrator an.",
+        "proTitle": "Pro",
+        "proText": "Einmalkauf. Dieser PC, 1 Benutzer, unbegrenzte Verbindungen.",
+        "businessTitle": "Business",
+        "businessText": "Jahresabo. Unbegrenzte Benutzer: Kollegen melden sich aus dem Büronetzwerk an.",
+        "buy": "Im Microsoft Store kaufen",
+        "trialActive": "Kostenlose Testversion aktiv.",
+        "trialDays": "Kostenlose Testversion: noch {n} Tage.",
+        "trialEnded": "Ihre Testversion ist abgelaufen. Wählen Sie einen Tarif, um Ihre Datenbanken weiter zu nutzen.",
+        "purchaseError": "Kauf nicht abgeschlossen. Prüfen Sie die Verbindung und versuchen Sie es erneut.",
+        "manage": "Käufe und Abo verwalten Sie über Ihr Microsoft-Konto.",
+        "plans": {
+          "trial": "Testversion",
+          "pro": "Pro",
+          "business": "Business",
+          "expired": "Testversion abgelaufen",
+          "pending": "Wird geprüft…"
+        }
       }
     }
   },
@@ -2223,6 +2323,26 @@ export const translations = {
         "owned": "Pro 有効：ありがとうございます！",
         "error": "購入できませんでした。後でもう一度お試しください。",
         "webOnly": "Pro は iPhone・iPad・Android のアプリで購入できます。"
+      },
+      "store": {
+        "setupIntro": "初回起動：管理者ユーザーを作成してください。",
+        "proTitle": "Pro",
+        "proText": "買い切り。この PC、1 ユーザー、接続数無制限。",
+        "businessTitle": "Business",
+        "businessText": "年間サブスクリプション。ユーザー数無制限：同僚は社内ネットワークからサインインできます。",
+        "buy": "Microsoft Store で購入",
+        "trialActive": "無料体験中です。",
+        "trialDays": "無料体験：残り {n} 日。",
+        "trialEnded": "無料体験が終了しました。データベースを引き続き使うにはプランを選択してください。",
+        "purchaseError": "購入を完了できませんでした。接続を確認して再試行してください。",
+        "manage": "購入とサブスクリプションは Microsoft アカウントで管理します。",
+        "plans": {
+          "trial": "無料体験",
+          "pro": "Pro",
+          "business": "Business",
+          "expired": "体験終了",
+          "pending": "確認中…"
+        }
       }
     }
   }

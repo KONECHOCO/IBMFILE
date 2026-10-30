@@ -24,8 +24,39 @@ PREFIX = "PLEXA1"
 COMMUNITY = {"plan": "community", "maxUsers": 3, "maxConnections": 2}
 
 
+# Microsoft Store plans. "1 PC" is enforced by the desktop shell, which only opens the gateway
+# to the network for Business. None = unlimited.
+STORE_PLANS = {
+    "trial": {"maxUsers": 1, "maxConnections": 2},
+    "pro": {"maxUsers": 1, "maxConnections": None},
+    "business": {"maxUsers": None, "maxConnections": None},
+    "expired": {"maxUsers": 1, "maxConnections": 0},
+    "pending": {"maxUsers": 1, "maxConnections": 0},
+}
+_store_entitlement = {"plan": "pending", "expires": None}
+
+
 class LicenseError(ValueError):
     pass
+
+
+def set_store_entitlement(plan: str, expires: str = None) -> None:
+    """Called by the desktop shell after reading the license from the Microsoft Store."""
+    if plan not in STORE_PLANS:
+        raise LicenseError(f"Unknown plan: {plan}")
+    _store_entitlement.update(plan=plan, expires=expires)
+
+
+def _store_status() -> dict:
+    plan = _store_entitlement["plan"]
+    return {**STORE_PLANS[plan], "plan": plan, "valid": plan in ("trial", "pro", "business"), "store": True,
+            "customer": None, "email": None, "expires": _store_entitlement["expires"], "licenseId": None,
+            "gatewayId": config.GATEWAY_ID, "problem": None}
+
+
+def can_use_databases() -> bool:
+    """False only in the Store app once the trial is over and nothing was purchased."""
+    return not config.STORE_MODE or _store_status()["valid"]
 
 
 def _b64d(s: str) -> bytes:
@@ -69,6 +100,8 @@ def remove() -> None:
 
 def status() -> dict:
     """Current license, limits included. Never raises."""
+    if config.STORE_MODE:
+        return _store_status()
     key = store.get_setting("license_key")
     base = {**COMMUNITY, "valid": False, "customer": None, "email": None, "expires": None,
             "licenseId": None, "gatewayId": config.GATEWAY_ID, "problem": None}
@@ -101,5 +134,6 @@ def ensure_can_add(kind: str, current: int) -> None:
     if limit is not None and current >= limit:
         raise LicenseError(
             f"Limit reached for the {st['plan']} plan: {limit} {kind}. "
-            "Activate a license in Administration → License to add more."
+            + ("Upgrade in Administration → License." if config.STORE_MODE
+               else "Activate a license in Administration → License to add more.")
         )
