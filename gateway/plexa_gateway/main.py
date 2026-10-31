@@ -230,7 +230,9 @@ def _within_license(kind: str, current: int):
 
 @app.get("/api/drivers")
 def list_drivers(_: dict = Depends(current_user)):
-    return [d.describe() for d in drivers.DRIVERS.values()]
+    described = [d.describe() for d in drivers.DRIVERS.values()]
+    # The Store package ships a fixed set of drivers and customers cannot pip install more.
+    return [d for d in described if d["available"]] if config.STORE_MODE else described
 
 
 class ConnectionIn(BaseModel):

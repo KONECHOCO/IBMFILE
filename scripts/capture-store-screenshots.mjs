@@ -1,26 +1,28 @@
 // Store screenshots from the real web app, with real data from the public demo gateway.
 // Prerequisite: `PLEXA_GATEWAY_URL=https://plexa.ikonetsolutions.com npm run dev -- --port 5174`
-// Usage: node scripts/capture-store-screenshots.mjs [iphone|ipad|android] [it|en|fr|es|de|ja]
+// Usage: node scripts/capture-store-screenshots.mjs [iphone|ipad|android|windows] [it|en|fr|es|de|ja]
 import { chromium } from "playwright";
 import { mkdir } from "node:fs/promises";
 import { translations } from "../src/i18n/translations.js";
 
-const device = ["ipad", "android"].includes(process.argv[2]) ? process.argv[2] : "iphone";
+const device = ["ipad", "android", "windows"].includes(process.argv[2]) ? process.argv[2] : "iphone";
 const lang = process.argv[3] || "it";
 const t = translations[lang];
 const SIZES = {
   iphone: { viewport: { width: 440, height: 956 }, deviceScaleFactor: 3, suffix: "1320x2868" },
   ipad: { viewport: { width: 1032, height: 1376 }, deviceScaleFactor: 2, suffix: "ipad-2064x2752" },
   android: { viewport: { width: 360, height: 640 }, deviceScaleFactor: 3, suffix: "android-1080x1920" },
+  windows: { viewport: { width: 1366, height: 768 }, deviceScaleFactor: 1.5, suffix: "windows-2049x1152" },
 };
+const desktop = device === "windows";
 const size = SIZES[device];
-const BASE = "http://localhost:5174";
+const BASE = process.env.PLEXA_SHOTS_BASE || "http://localhost:5174";
 const OUT = `store-assets/screenshots/${lang}`;
 await mkdir(OUT, { recursive: true });
 
 const browser = await chromium.launch();
 const context = await browser.newContext({
-  viewport: size.viewport, deviceScaleFactor: size.deviceScaleFactor, isMobile: device !== "ipad", hasTouch: true, locale: lang,
+  viewport: size.viewport, deviceScaleFactor: size.deviceScaleFactor, isMobile: device !== "ipad" && !desktop, hasTouch: !desktop, locale: lang,
 });
 await context.addInitScript((l) => localStorage.setItem("plexa.lang", l), lang);
 const page = await context.newPage();
@@ -35,7 +37,8 @@ const nav = (key) => page.locator("nav.mobile-tab-bar button:visible, .sidebar-n
 // 1) Sign-in screen with the public demo
 await page.goto(`${BASE}/?storeshot`);
 await page.getByText(t.ui.publicDemoTitle).waitFor({ timeout: 30000 });
-await shot("01-accesso");
+// The Windows app has no gateway address or public demo on this screen
+if (!desktop) await shot("01-accesso");
 
 // Sign in to the public demo
 await page.getByRole("button", { name: t.ui.enterDemo }).click();
@@ -70,9 +73,11 @@ await page.getByText("main.ORDERS").waitFor();
 await page.waitForTimeout(1500);
 await shot("04-catalogo");
 
-// 5) Pro
-await page.evaluate(() => window.scrollTo(0, 0));
-await page.locator(`button[title="${t.ui.pro.title}"]`).click();
-await shot("05-pro");
+// 5) Pro (phones only: the Windows plans are sold through the Microsoft Store)
+if (!desktop) {
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.locator(`button[title="${t.ui.pro.title}"]`).click();
+  await shot("05-pro");
+}
 
 await browser.close();

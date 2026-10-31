@@ -79,6 +79,25 @@ def test_sql_error_is_reported_not_faked(client, admin, demo_id):
     "WITH x AS (DELETE FROM ORDERS RETURNING *) SELECT * FROM x",
     "SELECT * INTO COPY_T FROM CUSTOMERS",
     "PRAGMA writable_schema=1",
+    "drop table CUSTOMERS",
+    "/* x */ TRUNCATE TABLE CUSTOMERS",
+    # Hidden from a naive reading, but executed by the database named in the comment
+    "SELECT 1 /*! INTO OUTFILE '/tmp/x' */",                    # MySQL executable comment
+    "SELECT 1--1 INTO OUTFILE '/tmp/x'",                        # MySQL: not a comment without a space
+    "SELECT 1 # '\n INTO OUTFILE 'x'",                          # MySQL: # comment before a quote
+    "SELECT 'a\\' , ' ; DROP TABLE t ; -- '",                   # MySQL: backslash escape
+    "SELECT $$'$$ ; DROP TABLE t ; --'",                        # PostgreSQL: dollar quoting
+    "SELECT 1 /* /* */ ' */ ; DROP TABLE t ; --'",              # PostgreSQL: nested comments
+    "SELECT q'[ ' ]' FROM DUAL ; DROP TABLE t --'",             # Oracle: q-quoted string
+    "SELECT 1 [ ; DROP TABLE t ; ]",                            # '[' only quotes on SQL Server
+    # No ';' needed on SQL Server, or run from inside a SELECT
+    "SELECT 1 SHUTDOWN",
+    "SELECT 1 KILL 55",
+    "SELECT 1 BACKUP DATABASE x TO DISK = 'y'",
+    "SELECT * FROM OPENROWSET('a', 'b', 'c')",
+    "SELECT xp_cmdshell",
+    "SELECT QSYS2.QCMDEXC('DLTF LIB/FILE') FROM SYSIBM.SYSDUMMY1",  # IBM i: runs a CL command
+    "SELECT pg_terminate_backend(1)",
 ])
 def test_writes_are_blocked(client, admin, demo_id, sql):
     r = client.post(f"/api/connections/{demo_id}/query", headers=admin, json={"sql": sql})
@@ -89,6 +108,12 @@ def test_writes_are_blocked(client, admin, demo_id, sql):
     "SELECT REPLACE(COMPANY_NAME, 'a', 'b') FROM CUSTOMERS",
     "SELECT * FROM CUSTOMERS WHERE COMPANY_NAME = 'DELETE; DROP'",
     "SELECT 1 -- delete me\n;",
+    "SELECT * FROM CUSTOMERS /* drop */ WHERE NOTE = 'it''s a DELETE'",
+    "SELECT CUST#, ORD$ FROM MYLIB.ORDERS# WHERE PATH = 'C:\\temp\\'",
+    "SELECT \"DELETE\" FROM T WHERE X = 'UPDATE'",
+    "WITH a AS (SELECT 1 AS X) SELECT * FROM a",
+    "SELECT UPDATED_AT, DROPPED, DELETED_FLAG FROM T",
+    "SELECT * FROM QSYS2.ACTIVE_JOB_INFO()",
 ])
 def test_guard_has_no_false_positives(sql):
     sqlguard.check(sql)
@@ -251,6 +276,7 @@ def test_store_mode_plans(client, admin, demo_id, monkeypatch):
     push = lambda plan, tok="shell-secret": client.post("/api/internal/store-license", json={"plan": plan, "expires": "2030-01-01"}, headers={"X-Plexa-Shell-Token": tok})
     run = lambda: client.post(f"/api/connections/{demo_id}/query", headers=admin, json={"sql": "SELECT 1"}).status_code
     try:
+        assert all(d["available"] for d in client.get("/api/drivers", headers=admin).json())
         assert push("business", "wrong").status_code == 403
         assert push("nonsense").status_code == 400
 
