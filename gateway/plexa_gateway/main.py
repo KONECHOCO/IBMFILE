@@ -266,6 +266,9 @@ def _conn_or_404(conn_id: str) -> dict:
 
 
 def _validated(body: ConnectionIn) -> dict:
+    # Everyone shares the public demo account, so a saved connection would be open to all of them.
+    if config.PUBLIC_DEMO:
+        raise HTTPException(403, "The public demo only offers its sample database: real connections cannot be added here.")
     driver = drivers.DRIVERS.get(body.driver)
     if not driver:
         raise HTTPException(400, f"Unsupported database type: {body.driver}")

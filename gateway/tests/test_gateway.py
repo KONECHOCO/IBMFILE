@@ -171,6 +171,24 @@ def test_ibmi_url_is_read_only():
     assert re.search(r"pub400\.com:\d", url) is None
 
 
+def test_public_demo_refuses_real_connections(client, admin, monkeypatch):
+    from plexa_gateway import config
+    body = {"name": "Real", "driver": "postgres", "host": "db.example.com", "username": "u", "password": "p"}
+    created = client.post("/api/connections", headers=admin, json=body)
+    assert created.status_code == 200
+    conn_id = created.json()["id"]
+    monkeypatch.setattr(config, "PUBLIC_DEMO", True)
+    try:
+        before = len(client.get("/api/connections", headers=admin).json())
+        assert client.post("/api/connections", headers=admin, json=body).status_code == 403
+        assert client.put(f"/api/connections/{conn_id}", headers=admin, json=body).status_code == 403
+        assert client.post("/api/connections/test", headers=admin, json=body).status_code == 403
+        assert len(client.get("/api/connections", headers=admin).json()) == before
+    finally:
+        monkeypatch.setattr(config, "PUBLIC_DEMO", False)
+        client.delete(f"/api/connections/{conn_id}", headers=admin)
+
+
 def test_public_demo_mode(monkeypatch):
     from plexa_gateway import config
     monkeypatch.setattr(config, "PUBLIC_DEMO", True)

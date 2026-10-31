@@ -38,7 +38,7 @@ TOKEN_HOURS = int(os.environ.get("PLEXA_TOKEN_HOURS", "12"))
 DEMO_MODE = os.environ.get("PLEXA_DEMO", "1") not in ("0", "false", "no")
 
 # Public demo (store reviewers, beta testers): a shared read-only "analyst" account
-# whose credentials the sign-in screen shows. Nobody can add connections.
+# whose credentials the sign-in screen shows. Nobody, not even an admin, can add connections.
 PUBLIC_DEMO = os.environ.get("PLEXA_PUBLIC_DEMO", "0") in ("1", "true", "yes")
 DEMO_USER = os.environ.get("PLEXA_DEMO_USER", "demo")
 DEMO_PASSWORD = os.environ.get("PLEXA_DEMO_PASSWORD", "plexa-demo")
